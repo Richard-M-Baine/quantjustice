@@ -67,7 +67,7 @@ module.exports = {
       },
       StdDevProbationMonth: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       MedianProbationMonth: {
         type: Sequelize.STRING,

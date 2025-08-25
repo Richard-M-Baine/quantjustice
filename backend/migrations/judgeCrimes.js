@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('JudgeCrime', {
+    await queryInterface.createTable('JudgeCrimes', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -71,7 +71,7 @@ module.exports = {
       },
       StdDevProbationMonth: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       MedianProbationMonth: {
         type: Sequelize.STRING,
@@ -83,7 +83,7 @@ module.exports = {
       },
       IDD: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
@@ -99,6 +99,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('JudgeCrime');
+    await queryInterface.dropTable('JudgeCrimes');
   }
 };

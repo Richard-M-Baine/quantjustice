@@ -71,7 +71,7 @@ module.exports = {
       },
       StdDevProbation: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       MedianProbation: {
         type: Sequelize.STRING,
@@ -83,7 +83,7 @@ module.exports = {
       },
       IDD: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       createdAt: {
         allowNull: false,

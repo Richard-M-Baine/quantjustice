@@ -82,10 +82,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     IDD: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     }
   }, {
-    tableName: 'CountyCrime',
+    tableName: 'CountyCrimes',
     timestamps: true, // This enables createdAt and updatedAt
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'

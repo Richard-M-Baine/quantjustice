@@ -85,7 +85,7 @@ module.exports = (sequelize) => {
       },
       IDD: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -101,7 +101,7 @@ module.exports = (sequelize) => {
     {
       sequelize,
       modelName: 'JudgeCrime',
-      tableName: 'JudgeCrime',
+      tableName: 'JudgeCrimes',
       timestamps: true,
       underscored: false,
     }
