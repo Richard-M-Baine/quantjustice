@@ -80,7 +80,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
-    ID: {
+    IDD: {
       type: DataTypes.STRING,
       allowNull: false
     }

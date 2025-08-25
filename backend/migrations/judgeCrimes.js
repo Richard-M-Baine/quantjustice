@@ -81,7 +81,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
-      ID: {
+      IDD: {
         type: Sequelize.STRING,
         allowNull: false
       },
