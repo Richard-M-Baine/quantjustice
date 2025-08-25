@@ -1,6 +1,8 @@
 const express = require('express');
 const sequelize = require('./config/database');
-const userRoutes = require('./routes/user');
+const countyRoutes = require('./routes/county');
+const judgeRoutes = require('./routes/judges')
+const crimeRoutes = require('./routes/crimes')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,7 +10,9 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Routes
-app.use('/api/users', userRoutes);
+app.use('/api/county', countyRoutes);
+app.use('/api/judges', judgeRoutes)
+app.use('/api/crimeRoutes', crimeRoutes)
 
 // Sync database and start server
 sequelize.sync({ force: true }).then(() => {
