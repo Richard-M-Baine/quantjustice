@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
   // The first argument is the model name ('Thing').
   // The second argument is an object defining the model's attributes.
   // The third argument is an options object.
-  Thing.init({
+  Judge.init({
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,

@@ -2,14 +2,17 @@
 
 2- county
 
-county main landing screen
+county main landing screen (in progress backend)
+this will compare three random counties with a crime. -- done
+it will consist mostly of links to the 25 or whatever individual counties
 
-search crimes and judges in x county
+
+
 
 individiual county landing screen
 
+search crimes and judges in x county
 compare county with other counties (specific crimes)
-
 compare judges in county with each other
 
 3 - judges
