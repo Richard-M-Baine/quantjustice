@@ -29,7 +29,7 @@ export const fetchLandingSampleThunk = () => async dispatch => {
         const countySample = await response.json()
         
 
-        dispatch(getLandingAction(countySample.countyCrimes));
+        dispatch(getLandingAction(countySample));
 
         return countySample
     }
@@ -49,17 +49,10 @@ const groupReducer = (state = initialState, action) => {
     switch (action.type) {
 
 
-        case LANDING: {
-            if (!action.payload) {
-                console.error("Invalid payload  for county.js line 52 panic!:", action.payload);
-                return state;
-            }
-            newState = {};
-            action.payload.forEach(county => {
-                newState[county.id] = county;
-            });
-            return newState;
-        }
+      case LANDING: {
+    if (!action.payload) return state;
+    return [...action.payload]; // keep everything as an array
+}
 
  
 
