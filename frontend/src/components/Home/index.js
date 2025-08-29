@@ -1,14 +1,29 @@
-import React from 'react'
 
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { fetchLandingSampleThunk } from '../../store/county.js';
 import './home.css'
 
 function Landing() {
+ const dispatch = useDispatch();
+ const counties = useSelector(state => state?.county);
+const countyArray = Object.values(counties);
+const offense = countyArray[0].Offense
+
+
+    const [loaded, setLoaded] = useState(false);
+
+      useEffect(() => {
+        dispatch(fetchLandingSampleThunk()).then(() => setLoaded(true));
+    }, [dispatch]);
 
 
 
-
-
+    if (!loaded) {
+        return <p>wait a bloody minute...</p>;
+    }
+    
     return (
 
 
@@ -22,19 +37,14 @@ function Landing() {
 
 
             <div className='randomCrime'></div>
-            <h3>random crime spotlight</h3>
-            <div className='countySampleLandingContainer'>
-                <h4 className='countylandingHeader'>county1</h4>
+            <h3>random crime spotlight {offense}</h3>
+            {Object.values(counties).map(county => (
+  <div key={county.id} className='countySampleLandingContainer'>
+    <h4 className='countylandingHeader'>{county.County}</h4>
+    <p>{county.Offense}</p>
+  </div>
+))}
 
-            </div>
-            <div className='countySampleLandingContainer'>
-                <h4 className='countylandingHeader'>county2</h4>
-
-            </div>
-            <div className='countySampleLandingContainer'>
-                <h4 className='countylandingHeader'>county3</h4>
-
-            </div>
 
 
 

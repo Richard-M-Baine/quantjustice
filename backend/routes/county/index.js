@@ -6,6 +6,7 @@ const sequelize = require('sequelize'); // Import sequelize to use its functions
 
 router.get('/landing', async (req, res) => {
     try {
+    
         // Step 1: Find one random Offense from the database
         const randomOffenseResult = await CountyCrime.findOne({
             attributes: ['Offense'],
@@ -27,6 +28,7 @@ router.get('/landing', async (req, res) => {
             group: ['County', 'Offense'], // Group by to ensure distinctness of the County
             limit: 3,
         });
+       
 
         if (countyLanding.length < 3) {
             return res.status(404).json({ message: 'Could not find 3 distinct counties for the selected offense.' });
@@ -34,8 +36,8 @@ router.get('/landing', async (req, res) => {
 
         // Convert to JSON-friendly format
         const response = { countyCrimes: countyLanding.map(item => item.toJSON()) };
-
-        return res.status(200).json(response);
+     
+        return res.json(response);
 
     } catch (error) {
         console.error("Error fetching county data:", error);

@@ -14,7 +14,7 @@ const getLandingAction = payload => {
 
 // all groups
 export const fetchLandingSampleThunk = () => async dispatch => {
-console.log('i am in the sample thunk')
+
     const response = await fetch('/api/county/landing',{
      method: 'GET',
         credentials: 'include', // Ensures cookies are sent with the request
@@ -23,11 +23,13 @@ console.log('i am in the sample thunk')
         }
     });
 
+
     if (response.ok) {
 
         const countySample = await response.json()
+        
 
-        dispatch(getLandingAction(countySample))
+        dispatch(getLandingAction(countySample.countyCrimes));
 
         return countySample
     }
@@ -48,8 +50,8 @@ const groupReducer = (state = initialState, action) => {
 
 
         case LANDING: {
-            if (!action.payload || !Array.isArray(action.payload)) {
-                console.error("Invalid payload structure for county.js line 52 panic!:", action.payload);
+            if (!action.payload) {
+                console.error("Invalid payload  for county.js line 52 panic!:", action.payload);
                 return state;
             }
             newState = {};
