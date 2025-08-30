@@ -1,0 +1,18 @@
+.randomCrimeSectionLanding{
+    display: flex;
+    flex-direction: row;
+}
+
+.outerDivRandomCrimeLanding{
+    display: flex;
+    flex-direction: column;
+}
+
+.randomcrimeheader{
+      text-align: center;
+}
+
+.linkSectionLandingDivMain{
+    display: flex;
+    flex-direction: row;
+}

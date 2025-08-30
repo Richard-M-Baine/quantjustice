@@ -7,6 +7,9 @@ import { Route, Routes } from 'react-router-dom';
 // homepage stuff
 import Landing from './components/Home';
 
+// test stuff
+import LandingTest from './components/Test';
+
 
 function App() {
 
@@ -22,6 +25,7 @@ function App() {
 
       <Routes>
         <Route path='/' element={<Landing />} />
+        <Route path='/test' element={<LandingTest/>} />
     
       </Routes>
 

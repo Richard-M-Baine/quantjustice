@@ -14,16 +14,16 @@ const countyMap = {
   ESS: "Essex",
   GLO: "Gloucester",
   HUD: "Hudson",
-  HUN: "Hunterdon",
+  HNT: "Hunterdon",
   MER: "Mercer",
   MID: "Middlesex",
   MON: "Monmouth",
-  MOR: "Morris",
+  MRS: "Morris",
   OCE: "Ocean",
   PAS: "Passaic",
-  SAL: "Salem",
+  SLM: "Salem",
   SOM: "Somerset",
-  SUS: "Sussex",
+  SSX: "Sussex",
   UNI: "Union",
   WAR: "Warren"
 };
@@ -31,37 +31,49 @@ const countyMap = {
 
 router.get('/landing', async (req, res) => {
   try {
-    // Step 1: Find one random Offense
-    const randomOffenseResult = await CountyCrime.findOne({
-      attributes: ['Offense'],
-      order: sequelize.literal('RANDOM()'),
-      limit: 1,
-    });
+    const MAX_ATTEMPTS = 10; // prevent infinite loops
+    let attempt = 0;
+    let countyLanding = [];
 
-    if (!randomOffenseResult) {
-      return res.status(404).json({ message: 'No offenses found.' });
+    while (attempt < MAX_ATTEMPTS) {
+      attempt++;
+
+      // Step 1: Pick random offense
+      const randomOffenseResult = await CountyCrime.findOne({
+        attributes: ['Offense'],
+        order: sequelize.literal('RANDOM()'),
+        limit: 1,
+      });
+
+      if (!randomOffenseResult) continue; // try again
+
+      const randomOffense = randomOffenseResult.Offense;
+
+      // Step 2: Get 3 distinct counties for that offense
+      countyLanding = await CountyCrime.findAll({
+        where: { Offense: randomOffense },
+        group: ['County', 'Offense'],
+        order: sequelize.literal('RANDOM()'),
+        limit: 3,
+      });
+
+      if (countyLanding.length >= 3) {
+        // Found a good result → stop retrying
+        break;
+      }
     }
-
-    const randomOffense = randomOffenseResult.Offense;
-
-    // Step 2: Find three distinct counties with that offense
-    const countyLanding = await CountyCrime.findAll({
-      where: { Offense: randomOffense },
-      group: ['County', 'Offense'],
-      order: sequelize.literal('RANDOM()'),
-      limit: 3,
-    });
 
     if (countyLanding.length < 3) {
-      return res.status(404).json({ message: 'Could not find 3 distinct counties for the selected offense.' });
+      // after MAX_ATTEMPTS still nothing
+      return res.status(404).json({ message: 'Could not find 3 distinct counties after multiple attempts.' });
     }
 
-    // Step 3: Map results with full county names
+    // Step 3: Format result
     const response = countyLanding.map(item => {
       const json = item.toJSON();
       return {
         ...json,
-        County: countyMap[json.County] || json.County, // fallback to original if not found
+        County: countyMap[json.County] || json.County,
       };
     });
 
@@ -72,6 +84,7 @@ router.get('/landing', async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 
 
