@@ -132,7 +132,7 @@ function Landing() {
                 </div>
 
                 <div className="linkSectionLandingDivMain">
-                    <Link to="/county-comparison" className="linkSectionLandingDiv">
+                    <Link to="/county" className="linkSectionLandingDiv">
                         <h3>Compare county sentencing with others.  Search misconduct records.</h3>
 
                         <img src={image1} alt="two faced judge" />
