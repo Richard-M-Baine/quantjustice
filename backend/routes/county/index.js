@@ -19,7 +19,7 @@ const countyMap = {
   MID: "Middlesex",
   MON: "Monmouth",
   MRS: "Morris",
-  OCE: "Ocean",
+  OCN: "Ocean",
   PAS: "Passaic",
   SLM: "Salem",
   SOM: "Somerset",
