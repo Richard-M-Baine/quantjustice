@@ -1,0 +1,56 @@
+'use strict';
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('Kettlehundes', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      Year: {
+        type: Sequelize.INTEGER
+      },
+      AgencyName: {
+        type: Sequelize.STRING
+      },
+      County: {
+        type: Sequelize.STRING
+      },
+      Number: {
+        type: Sequelize.INTEGER
+      },
+      Rank: {
+        type: Sequelize.STRING
+      },
+      FirstName: {
+        type: Sequelize.STRING
+      },
+      LastName: {
+        type: Sequelize.STRING
+      },
+      Terminated: {
+        type: Sequelize.STRING
+      },
+      Demoted: {
+        type: Sequelize.STRING
+      },
+      Suspended: {
+        type: Sequelize.STRING
+      },
+      SuspendedDays: {
+        type: Sequelize.INTEGER
+      },
+      SustainedCharge: {
+        type: Sequelize.STRING
+      },
+      Description: {
+        type: Sequelize.STRING
+      },
+     
+    });
+  },
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('Kettlehundes');
+  }
+};
