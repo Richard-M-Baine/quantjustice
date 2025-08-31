@@ -1,59 +1,30 @@
 import pandas as pd
 import sqlite3
 
-# Read CSV
-df = pd.read_csv('newOne.csv')
+DB_PATH = "../myapp.db"
 
-# Connect to database
-conn = sqlite3.connect('../myapp.db')
+def import_csv_to_sqlite(csv_file, table_name, encoding="utf-8", clean=True):
+    """Reads a CSV file and appends its data to a SQLite table."""
+    df = pd.read_csv(csv_file, encoding=encoding)
 
-# Import to SQLite (if_exists='replace' will overwrite existing data)
-df.to_sql('Things', conn, if_exists='append', index=False)
+    if clean:
+        # Strip whitespace from headers
+        df.columns = df.columns.str.strip()
+        # Strip whitespace from string values
+        df = df.map(lambda x: x.strip() if isinstance(x, str) else x)
 
-conn.close()
+    with sqlite3.connect(DB_PATH) as conn:
+        df.to_sql(table_name, conn, if_exists="append", index=False)
 
-# totalCrime
+    print(f"{table_name} clear ✅")
 
-# Read CSV
-df = pd.read_csv('totalCrime.csv')
 
-# Connect to database
-conn = sqlite3.connect('../myapp.db')
-
-# Import to SQLite (if_exists='replace' will overwrite existing data)
-df.to_sql('TotalCrimes', conn, if_exists='append', index=False)
-
-conn.close()
-
-# judgeCrimes
-
-df = pd.read_csv('judgeCrimes.csv')
-
-# Connect to database
-conn = sqlite3.connect('../myapp.db')
-
-# Import to SQLite (if_exists='replace' will overwrite existing data)
-df.to_sql('JudgeCrimes', conn, if_exists='append', index=False)
-
-conn.close()
-
-# judgeList
-
-df = pd.read_csv('judgeList.csv')
-
-# Connect to database
-conn = sqlite3.connect('../myapp.db')
-
-# Import to SQLite (if_exists='replace' will overwrite existing data)
-df.to_sql('Judges', conn, if_exists='append', index=False)
-
-conn.close()
-
-# countyCrimes
-
-df = pd.read_csv('countyCrimes.csv')
-
-conn = sqlite3.connect('../myapp.db')
-df.to_sql('CountyCrimes', conn, if_exists='append', index=False)
-
-conn.close()
+# Import all datasets
+import_csv_to_sqlite("newOne.csv", "Things")
+import_csv_to_sqlite("totalCrime.csv", "TotalCrimes")
+import_csv_to_sqlite("judgeCrimes.csv", "JudgeCrimes")
+import_csv_to_sqlite("judgeList.csv", "Judges")
+import_csv_to_sqlite("countyCrimes.csv", "CountyCrimes")
+import_csv_to_sqlite("textcsv.csv", "Kettlehundes", encoding="cp1252")
+import_csv_to_sqlite("nationWideOne.csv", "nationOnes", encoding="cp1252")
+import_csv_to_sqlite("nationTwo.csv", "TwoNations", encoding="cp1252")

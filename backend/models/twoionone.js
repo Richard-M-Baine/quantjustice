@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   TwoNation.init({
+    FirstName: DataTypes.STRING,
+    MiddleName: DataTypes.STRING,
+    LastName: DataTypes.STRING,
     Name: DataTypes.STRING,
     State: DataTypes.STRING,
     Agency: DataTypes.STRING,

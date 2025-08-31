@@ -42,12 +42,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       SustainedCharge: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT   // was STRING
       },
       Description: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT   // was STRING
       },
-     
     });
   },
   async down(queryInterface, Sequelize) {

@@ -36,10 +36,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       source: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       info: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
       

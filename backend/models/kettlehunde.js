@@ -1,37 +1,64 @@
+// models/kettlehundes.js
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  class Kettlehunde extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  class Kettlehundes extends Model {
+    // You can add associations here later if needed
     static associate(models) {
       // define association here
     }
   }
-  Kettlehunde.init({
-    Year: DataTypes.INTEGER,
-    AgencyName: DataTypes.STRING,
-    County: DataTypes.STRING,
-    Number: DataTypes.INTEGER,
-    Rank: DataTypes.STRING,
-    FirstName: DataTypes.STRING,
-    LastName: DataTypes.STRING,
-    Terminated: DataTypes.STRING,
-    Demoted: DataTypes.STRING,
-    Suspended: DataTypes.STRING,
-    SuspendedDays: DataTypes.INTEGER,
-    SustainedCharge: DataTypes.STRING,
-    Description: DataTypes.STRING,
 
+  Kettlehundes.init(
+    {
+      Year: {
+        type: DataTypes.INTEGER,
+      },
+      AgencyName: {
+        type: DataTypes.STRING,
+      },
+      County: {
+        type: DataTypes.STRING,
+      },
+      Number: {
+        type: DataTypes.INTEGER,
+      },
+      Rank: {
+        type: DataTypes.STRING,
+      },
+      FirstName: {
+        type: DataTypes.STRING,
+      },
+      LastName: {
+        type: DataTypes.STRING,
+      },
+      Terminated: {
+        type: DataTypes.STRING,
+      },
+      Demoted: {
+        type: DataTypes.STRING,
+      },
+      Suspended: {
+        type: DataTypes.STRING,
+      },
+      SuspendedDays: {
+        type: DataTypes.INTEGER,
+      },
+      SustainedCharge: {
+        type: DataTypes.TEXT, // unlimited length
+      },
+      Description: {
+        type: DataTypes.TEXT, // unlimited length
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Kettlehundes',
+      tableName: 'Kettlehundes',
+      timestamps: false, // you didn’t define createdAt/updatedAt in migration
+    }
+  );
 
-  }, {
-    sequelize,
-    modelName: 'Kettlehunde',
-  });
-  return Kettlehunde;
+  return Kettlehundes;
 };
