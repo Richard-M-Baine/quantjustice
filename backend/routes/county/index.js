@@ -1,8 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { CountyCrime } = require('../../models');
+const { CountyCrime, Kettlehundes, nationOne, TwoNation } = require('../../models');
 
 const sequelize = require('sequelize'); // Import sequelize to use its functions
+
+// Utility to strip out undefined/empty filters
+const clean = (obj) => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, v]) => v !== undefined && v !== "")
+  );
+};
 
 const countyMap = {
   ATL: "Atlantic",
@@ -84,6 +91,88 @@ router.get('/landing', async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+
+
+router.get('/misconduct', async (req, res) => {
+  try {
+    
+    const { dienstgrad, ersteName, zweiteName, land, Amtstelle } = req.query;
+
+    // Build where clauses
+    const kettleWhere = clean({
+      Rank: dienstgrad,      
+      FirstName: ersteName,
+      LastName: zweiteName,
+      AgencyName: Amtstelle
+    });
+
+    const nationOneWhere = clean({
+      rank: dienstgrad,
+      FirstName: ersteName,
+      LastName: zweiteName,
+      State: land,
+      Agency: Amtstelle
+    });
+
+    const nationTwoWhere = clean({
+      FirstName: ersteName,
+      LastName: zweiteName,
+      State: land,
+      Agency: Amtstelle
+    });
+
+    // Run queries in parallel
+    const [kettleResults, nationOneResults, nationTwoResults] = await Promise.all([
+      Kettlehundes.findAll({ where: kettleWhere }),
+      nationOne.findAll({ where: nationOneWhere }),
+      TwoNation.findAll({ where: nationTwoWhere })
+    ]);
+
+    // Normalize + tag results
+    const normalizedKettle = kettleResults.map(r => ({
+      rank: r.Rank,
+      firstName: r.FirstName,
+      lastName: r.LastName,
+      country: r.County,
+      office: r.AgencyName,
+      source: "Kettlehundes"
+    }));
+
+    const normalizedNationOne = nationOneResults.map(r => ({
+      rank: null, // doesn’t exist in NationOne
+      firstName: r.FirstName,
+      lastName: r.LastName,
+      country: r.State,
+      office: r.Agency,
+      source: "NationOne"
+    }));
+
+    const normalizedTwoNation = nationTwoResults.map(r => ({
+      rank: null, // doesn’t exist in TwoNation either
+      firstName: r.FirstName,
+      lastName: r.LastName,
+      country: r.State,
+      office: r.Agency,
+      source: "TwoNation"
+    }));
+
+    const allResults = [
+      ...normalizedKettle,
+      ...normalizedNationOne,
+      ...normalizedTwoNation
+    ];
+
+    console.log('i am all results ', allResults);
+    res.json(allResults);
+
+  } catch (err) {
+    console.error("Error fetching misconduct search:", err);
+    res.status(500).json({ error: "Server error while searching misconduct" });
+  }
+});
+
 
 
 

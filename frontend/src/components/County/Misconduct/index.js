@@ -63,8 +63,9 @@ const dispatch = useDispatch()
       land: stateAbbreviation,
       Amtstelle: agency,
     }
-
+    console.log(searchMisconductGroup, ' i am in component')
     await dispatch(fetchMisconductSearchThunk(searchMisconductGroup))
+    
   };
 
   return (

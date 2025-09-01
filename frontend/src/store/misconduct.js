@@ -14,27 +14,26 @@ const getMisconductAction = payload => {
 
 // all groups
 export const fetchMisconductSearchThunk = (payload) => async dispatch => {
+    console.log('i am payload', payload);
 
-    const response = await fetch('/api/county/misconduct',{
-     method: 'GET',
-        credentials: 'include', // Ensures cookies are sent with the request
+    // Turn payload object into query string
+    const queryString = new URLSearchParams(payload).toString();
+
+    const response = await fetch(`/api/county/misconduct?${queryString}`, {
+        method: 'GET',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
         }
     });
 
-
     if (response.ok) {
-
-        const countySample = await response.json()
-        
-
-        dispatch(getMisconductAction(countySample));
-
-        return countySample
+        const misconductResults = await response.json();
+        console.log(misconductResults)
+        dispatch(getMisconductAction(misconductResults));
+        return misconductResults;
     }
-
-}
+};
 
 
 
