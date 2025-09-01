@@ -12,6 +12,7 @@ import LandingTest from './components/Test';
 
 // county stuff
 import CountyLanding from './components/County/CountyLanding';
+import MisconductSearch from './components/County/Misconduct/index.js';
 
 // navbar stuff
 import NavBar from './components/NavBar/index.js'
@@ -32,6 +33,7 @@ const location = useLocation()
         <Route path='/' element={<Landing />} />
         <Route path='/test' element={<LandingTest/>} />
         <Route path='/county' element={<CountyLanding/>} />
+        <Route path='/misconduct' element={<MisconductSearch/>} />
     
       </Routes>
 

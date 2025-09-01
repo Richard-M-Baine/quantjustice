@@ -144,9 +144,7 @@ function CountyLanding() {
           Browse available misconduct records by agency.
         </p>
         <div className="misconductLinks">
-          <Link to="/misconduct/statewide">Statewide Misconduct Data</Link>
-          <Link to="/misconduct/agencies">Browse by Agency</Link>
-          <Link to="/misconduct/search">Search Misconduct Records</Link>
+          <Link to="/misconduct">Search Nationwide Decertifications and Misconduct</Link>
         </div>
       </section>
 
