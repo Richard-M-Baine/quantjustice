@@ -12,9 +12,9 @@ const getMisconductAction = payload => {
 
 
 
-// all groups
+
 export const fetchMisconductSearchThunk = (payload) => async dispatch => {
-    console.log('i am payload', payload);
+  
 
     // Turn payload object into query string
     const queryString = new URLSearchParams(payload).toString();

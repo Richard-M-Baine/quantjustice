@@ -137,7 +137,9 @@ router.get('/misconduct', async (req, res) => {
       lastName: r.LastName,
       country: r.County,
       office: r.AgencyName,
-      source: "Kettlehundes"
+      source: "Kettlehundes",
+      ...r.toJSON()
+
     }));
 
     const normalizedNationOne = nationOneResults.map(r => ({
@@ -146,7 +148,8 @@ router.get('/misconduct', async (req, res) => {
       lastName: r.LastName,
       country: r.State,
       office: r.Agency,
-      source: "NationOne"
+      source: "NationOne",
+      ...r.toJSON()
     }));
 
     const normalizedTwoNation = nationTwoResults.map(r => ({
@@ -155,7 +158,8 @@ router.get('/misconduct', async (req, res) => {
       lastName: r.LastName,
       country: r.State,
       office: r.Agency,
-      source: "TwoNation"
+      source: "TwoNation",
+      ...r.toJSON()
     }));
 
     const allResults = [
