@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 
 import './misconduct.css';
 
+import {fetchMisconductSearchThunk} from '../../../store/misconduct.js'
+
 function MisconductSearch() {
+const dispatch = useDispatch()
+
   const [rank, setRank] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -35,7 +39,7 @@ function MisconductSearch() {
     }
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     // Final check before submission
@@ -46,13 +50,21 @@ function MisconductSearch() {
       return; // Stop form submission
     }
 
-    // You can add your form submission logic here
-    console.log('Form submitted with:', {
-      rank,
-      firstName,
-      lastName,
-      stateAbbreviation
-    });
+  
+
+
+
+
+
+    const searchMisconductGroup = {
+      dienstGrad: rank,
+      ersteName: firstName,
+      zweiteName: lastName,
+      land: stateAbbreviation,
+      Amtstelle: agency,
+    }
+
+    await dispatch(fetchMisconductSearchThunk(searchMisconductGroup))
   };
 
   return (
