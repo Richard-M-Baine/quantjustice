@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import './misconduct.css';
 
-import MisconductCard from '../Misconduct/MisconductCard/index.js'
+import MisconductCard from './MisconductCard/index.js'
 
 import { fetchMisconductSearchThunk } from '../../../store/misconduct.js'
 

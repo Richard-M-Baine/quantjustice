@@ -12,7 +12,7 @@ import LandingTest from './components/Test';
 
 // county stuff
 import CountyLanding from './components/County/CountyLanding';
-import MisconductSearch from './components/County/Misconduct/index.js';
+import MisconductSearch from './components/Misconduct/Misconduct/index.js';
 
 // navbar stuff
 import NavBar from './components/NavBar/index.js'
