@@ -164,9 +164,12 @@ function CountyLanding() {
     </div>
   </div>
 
-  {/* Incarceration */}
-  {showIncarceration && (
-    <div className="sampleGrid">
+ 
+ {/* Incarceration */}
+{showIncarceration && (
+  <div className="sampleGrid">
+    <h2 className="countyLandingSampleHeader">Incarceration Data</h2>
+    <div className="sampleGridCards">
       {countyListState.slice(0, 3).map(county => (
         <div key={county.id} className="sampleCard">
           <h3>{county.County}</h3>
@@ -181,11 +184,14 @@ function CountyLanding() {
         </div>
       ))}
     </div>
-  )}
+  </div>
+)}
 
-  {/* Probation */}
-  {!showIncarceration && (
-    <div className="sampleGridProbation">
+{/* Probation */}
+{!showIncarceration && (
+  <div className="sampleGridProbation">
+    <h2 className="countyLandingSampleHeader">Probation Data</h2>
+    <div className="sampleGridCards">
       {countyListState.slice(0, 3).map(county => (
         <div key={county.id} className="sampleCard">
           <h3>{county.County}</h3>
@@ -200,7 +206,8 @@ function CountyLanding() {
         </div>
       ))}
     </div>
-  )}
+  </div>
+)}
 </section>
 
 

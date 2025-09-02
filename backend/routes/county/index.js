@@ -137,7 +137,7 @@ router.get('/misconduct', async (req, res) => {
       lastName: r.LastName,
       country: r.County,
       office: r.AgencyName,
-      source: "Kettlehundes",
+      dataSet: "Kettlehundes",
       ...r.toJSON()
 
     }));
@@ -147,8 +147,8 @@ router.get('/misconduct', async (req, res) => {
       firstName: r.FirstName,
       lastName: r.LastName,
       country: r.State,
-      office: r.Agency,
-      source: "NationOne",
+      office: r.agency,
+      dataSet: "NationOne",
       ...r.toJSON()
     }));
 
@@ -158,7 +158,7 @@ router.get('/misconduct', async (req, res) => {
       lastName: r.LastName,
       country: r.State,
       office: r.Agency,
-      source: "TwoNation",
+      dataSet: "TwoNation",
       ...r.toJSON()
     }));
 

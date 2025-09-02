@@ -4,17 +4,24 @@ import { Link } from "react-router-dom";
 
 import './misconduct.css';
 
-import {fetchMisconductSearchThunk} from '../../../store/misconduct.js'
+import MisconductCard from '../Misconduct/MisconductCard/index.js'
+
+import { fetchMisconductSearchThunk } from '../../../store/misconduct.js'
 
 function MisconductSearch() {
-const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
   const [rank, setRank] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [stateAbbreviation, setStateAbbreviation] = useState('');
   const [stateError, setStateError] = useState('');
-  const [agency, setAgency] = useState('')
+  const [agency, setAgency] = useState('');
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasSearched, setHasSearched] = useState(false);
+  const resultsPerPage = 15;
 
   // A simple list of valid state abbreviations
   const validStateAbbreviations = [
@@ -50,12 +57,6 @@ const dispatch = useDispatch()
       return; // Stop form submission
     }
 
-  
-
-
-
-
-
     const searchMisconductGroup = {
       dienstGrad: rank,
       ersteName: firstName,
@@ -63,9 +64,47 @@ const dispatch = useDispatch()
       land: stateAbbreviation,
       Amtstelle: agency,
     }
+
     console.log(searchMisconductGroup, ' i am in component')
     await dispatch(fetchMisconductSearchThunk(searchMisconductGroup))
-    
+    setHasSearched(true);
+    setCurrentPage(0); // Reset to first page on new search
+  };
+
+  const handleReset = () => {
+    setRank('');
+    setFirstName('');
+    setLastName('');
+    setStateAbbreviation('');
+    setStateError('');
+    setAgency('');
+    setCurrentPage(0);
+    setHasSearched(false);
+    // Optionally clear the Redux state here if you have a clear action
+    // dispatch(clearMisconductResults());
+  };
+
+  // Get results and pagination data
+  const misconducts = useSelector(state => state?.misconduct ?? {});
+  const misconductList = misconducts ? Object.values(misconducts) : [];
+
+  // Calculate pagination
+  const totalResults = misconductList.length;
+  const totalPages = Math.ceil(totalResults / resultsPerPage);
+  const startIndex = currentPage * resultsPerPage;
+  const endIndex = startIndex + resultsPerPage;
+  const currentResults = misconductList.slice(startIndex, endIndex);
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   return (
@@ -84,8 +123,6 @@ const dispatch = useDispatch()
           />
         </div>
 
-
-
         <div className="form-glump">
           <label>Officer First Name:</label>
           <input
@@ -95,13 +132,9 @@ const dispatch = useDispatch()
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
-
         </div>
 
-
-
         <div className="form-glump">
-
           <label htmlFor="officerName">Officer Last Name:</label>
           <input
             type="text"
@@ -126,7 +159,6 @@ const dispatch = useDispatch()
         </div>
 
         <div className="form-glump">
-
           <label htmlFor="officerName">Department / Agency</label>
           <input
             type="text"
@@ -137,13 +169,100 @@ const dispatch = useDispatch()
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={!!stateError} // Disable button if there's an error
-        >
-          Search
-        </button>
+        <div className="button-group">
+          <button
+            type="submit"
+            disabled={!!stateError} // Disable button if there's an error
+          >
+            Search
+          </button>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="reset-button"
+          >
+            Reset
+          </button>
+        </div>
       </form>
+
+      {/* Results section */}
+      <div className='results-section'>
+        {!hasSearched ? (
+          <div className="no-search-message">
+            <p>Enter search criteria above to find misconduct cases.</p>
+          </div>
+        ) : totalResults === 0 ? (
+          <div className="no-results-message">
+            <p>No misconduct cases found matching your search criteria.</p>
+          </div>
+        ) : (
+          <>
+            {/* Results summary and pagination controls */}
+            <div className="results-header">
+              <p className="results-count">
+                Showing {startIndex + 1}-{Math.min(endIndex, totalResults)} of {totalResults} results
+              </p>
+
+              {totalPages > 1 && (
+                <div className="pagination-controls">
+                  <button
+                    onClick={goToPrevPage}
+                    disabled={currentPage === 0}
+                    className="pagination-btn"
+                  >
+                    Previous {resultsPerPage}
+                  </button>
+
+                  <span className="page-info">
+                    Page {currentPage + 1} of {totalPages}
+                  </span>
+
+                  <button
+                    onClick={goToNextPage}
+                    disabled={currentPage >= totalPages - 1}
+                    className="pagination-btn"
+                  >
+                    Next {resultsPerPage}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Results grid */}
+            <div className='groupsAllPart'>
+              {currentResults.map(misconduct => (
+                <MisconductCard misconduct={misconduct} key={misconduct.id} />
+              ))}
+            </div>
+
+            {/* Bottom pagination (optional - for convenience when scrolling down) */}
+            {totalPages > 1 && (
+              <div className="pagination-controls bottom-pagination">
+                <button
+                  onClick={goToPrevPage}
+                  disabled={currentPage === 0}
+                  className="pagination-btn"
+                >
+                  Previous 10
+                </button>
+
+                <span className="page-info">
+                  Page {currentPage + 1} of {totalPages}
+                </span>
+
+                <button
+                  onClick={goToNextPage}
+                  disabled={currentPage >= totalPages - 1}
+                  className="pagination-btn"
+                >
+                  Next 10
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

@@ -59,29 +59,43 @@
 }
 
 .sampleSection {
-  padding: 2rem 0;
+  padding: 1rem 0;
   text-align: center;
 }
 
-.sampleGrid {
+.sampleGrid, .sampleGridProbation {
   display: flex;
-  flex-direction: row;
-  gap: 2rem;
+  flex-direction: column; /* Change to column to stack header and cards */
+  align-items: center; /* Center items horizontally */
+  gap: 1rem;
   justify-content: center;
 }
 
+.countyLandingSampleHeader {
+  text-align: center;
+  width: 100%; /* Ensure it spans the container for consistent centering */
+}
+
+
+
+
 .sampleCard {
   background: #fff;
-  padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   width: 250px;
   text-align: center;
 }
 
-.sampleGridProbation {
+
+
+.countyLandingSampleHeader {
+  text-align: center;
+}
+
+.sampleGridCards {
   display: flex;
   flex-direction: row;
-  gap: 2rem;
+  gap: 1rem;
   justify-content: center;
 }
