@@ -4,30 +4,34 @@ import { Link, useParams } from "react-router-dom";
 
 import './individual.css';
 import { CompareOneCountyThunk } from '../../../store/county';
+import {fetchAllJudgesInCountyThunk} from '../../../store/judge'
 
 function CountyIndividual() {
   const { county } = useParams();
   const dispatch = useDispatch();
+
+  const judges = useSelector(state => state?.judges);
+ 
   
   // State for the three main features
   const [selectedCrime, setSelectedCrime] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [comparisonMode, setComparisonMode] = useState(''); // 'counties' or 'judges'
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   
   useEffect(() => {
-    
+    dispatch(fetchAllJudgesInCountyThunk(county)).then(() => setLoaded(true));
   }, [county, dispatch]);
 
   const handleCrimeSearch = async (crimeType) => {
-    setIsLoading(true);
+    setLoaded(true);
     setSelectedCrime(crimeType);
     // Dispatch your search thunk here
     // const results = await dispatch(searchCrimeDataThunk(county, crimeType));
     // setSearchResults(results);
-    setIsLoading(false);
+    setLoaded(false);
   };
 
   const handleComparison = (mode) => {
@@ -44,7 +48,7 @@ function CountyIndividual() {
     }
   };
 
-  return (
+  return loaded && (
     <div className="mainCountyLanding">
       <h1>All about {county}</h1>
       
@@ -59,7 +63,7 @@ function CountyIndividual() {
           {/* Add more crime types as needed */}
         </div>
         
-        {isLoading && <div className="loading">Loading crime data...</div>}
+        {loaded && <div className="loading">Loading crime data...</div>}
         
         {searchResults && (
           <div className="search-results">
@@ -109,29 +113,7 @@ function CountyIndividual() {
         </section>
       )}
 
-      {/* Section 3: Judges List */}
-      <section className="judges-section">
-        <h2>⚖️ Judges in {county}</h2>
-        <div className="judges-grid">
-          {judges.length > 0 ? (
-            judges.map(judge => (
-              <div key={judge.id} className="judge-card">
-                <h4>{judge.name}</h4>
-                <p>{judge.court}</p>
-                <p>Cases handled: {judge.caseCount}</p>
-                <Link to={`/judges/${judge.id}`} className="judge-link">
-                  View Judge Profile →
-                </Link>
-              </div>
-            ))
-          ) : (
-            <div className="no-judges">
-              <p>Loading judges data...</p>
-              {/* Or show placeholder cards */}
-            </div>
-          )}
-        </div>
-      </section>
+  
     </div>
   );
 }

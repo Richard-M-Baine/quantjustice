@@ -29,7 +29,7 @@ export const fetchMisconductSearchThunk = (payload) => async dispatch => {
 
     if (response.ok) {
         const misconductResults = await response.json();
-        console.log(misconductResults)
+ 
         dispatch(getMisconductAction(misconductResults));
         return misconductResults;
     }

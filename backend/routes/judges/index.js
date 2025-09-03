@@ -28,7 +28,7 @@ const countyMap = {
 };
 
 // Example route
-router.get('/:county', async (req, res) => {
+router.get('/all/:county', async (req, res) => {
   const countyName = req.params.county;
 
   // Find the county key based on the county name

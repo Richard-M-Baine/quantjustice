@@ -1,0 +1,23 @@
+    {/* Section 3: Judges List */}
+       <section className="judges-section">
+        <h2>⚖️ Judges in {county}</h2>
+        <div className="judges-grid">
+          {judges.length > 0 ? (
+            judges.map(judge => (
+              <div key={judge.id} className="judge-card">
+                <h4>{judge.name}</h4>
+                <p>{judge.court}</p>
+                <p>Cases handled: {judge.caseCount}</p>
+                <Link to={`/judges/${judge.id}`} className="judge-link">
+                  View Judge Profile →
+                </Link>
+              </div>
+            ))
+          ) : (
+            <div className="no-judges">
+              <p>Loading judges data...</p>
+              {/* Or show placeholder cards */}
+            </div>
+          )}
+        </div>
+      </section>  
