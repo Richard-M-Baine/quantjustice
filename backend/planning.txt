@@ -4,7 +4,7 @@
 
 county main landing screen - MPD
 
-police misconduct section - make model
+police misconduct section - MPD - refactor backend so it returns stuff in a nice way and links and shit
 
 - 
 
@@ -13,6 +13,7 @@ individiual county landing screen
 search crimes and judges in x county
 compare county with other counties (specific crimes)
 compare judges in county with each other
+get list of judges in county
 
 3 - judges
 

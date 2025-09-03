@@ -127,7 +127,7 @@ function CountyLanding() {
           {countyList.map(county => (
             <Link
               key={county.id}
-              to={`/counties/${county.name}`}
+              to={`/county/${county.name}`}
               className="countyLink"
             >
               {county.name}
