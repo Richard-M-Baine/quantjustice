@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 
-import { fetchLandingSampleThunk } from '../../../store/county.js';
+import { fetchCountyLandingSampleThunk } from '../../../store/county.js';
 import './countyLanding.css';
 
 function CountyLanding() {
@@ -13,7 +13,7 @@ function CountyLanding() {
   const countyListState = useSelector(state => state?.county);
 
   useEffect(() => {
-    dispatch(fetchLandingSampleThunk()).then(() => setLoaded(true));
+    dispatch(fetchCountyLandingSampleThunk()).then(() => setLoaded(true));
   }, [dispatch]);
 
   if (!loaded) {

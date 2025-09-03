@@ -178,6 +178,13 @@ router.get('/misconduct', async (req, res) => {
 });
 
 
+router.get('/individual/:county', async (req, res) => {
+  const county = req.params
+
+  return res.json(county)
+
+
+});
 
 
 

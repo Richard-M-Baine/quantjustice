@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 
-import { fetchLandingSampleThunk } from '../../store/county.js';
+import { fetchCountyLandingSampleThunk } from '../../store/county.js';
 import './home.css'
 
 import image1 from '../../assets/counties.png';
@@ -20,7 +20,7 @@ function Landing() {
 
 
     useEffect(() => {
-        dispatch(fetchLandingSampleThunk()).then(() => setLoaded(true));
+        dispatch(fetchCountyLandingSampleThunk()).then(() => setLoaded(true));
     }, [dispatch]);
 
     if (!loaded) {

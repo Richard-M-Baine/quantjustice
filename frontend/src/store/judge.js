@@ -44,7 +44,7 @@ const initialState = {}
 
 const judgeReducer = (state = initialState, action) => {
 
-    let newState = {};
+
 
     switch (action.type) {
 
