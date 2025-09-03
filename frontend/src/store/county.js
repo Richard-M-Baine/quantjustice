@@ -42,7 +42,7 @@ export const fetchLandingSampleThunk = () => async dispatch => {
 
 const initialState = {}
 
-const groupReducer = (state = initialState, action) => {
+const countyReducer = (state = initialState, action) => {
 
     let newState = {};
 
@@ -63,4 +63,4 @@ const groupReducer = (state = initialState, action) => {
 }
 
 
-export default groupReducer;
+export default countyReducer;

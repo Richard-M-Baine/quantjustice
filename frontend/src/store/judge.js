@@ -1,4 +1,4 @@
-const allJudgesInCounty = 'county/landing'
+const allJudgesInCounty = 'judge/judgeList'
 
 
 const getAllJudgesAction = payload => {

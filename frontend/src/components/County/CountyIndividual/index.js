@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from "react-router-dom";
 
 import './individual.css';
-import { CompareOneCountyThunk } from '../../../store/county';
+import { CompareOneCountyDataThunk } from '../../../store/county';
 import {fetchAllJudgesInCountyThunk} from '../../../store/judge'
 
 function CountyIndividual() {
