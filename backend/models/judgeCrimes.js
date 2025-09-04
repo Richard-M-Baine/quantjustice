@@ -15,6 +15,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+     
       Offense: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -82,6 +83,10 @@ module.exports = (sequelize) => {
       ModeProbationMonth: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+       County: {
+        type: DataTypes.STRING,
+        allowNull: false
       },
       IDD: {
         type: DataTypes.STRING,

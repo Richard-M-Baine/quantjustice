@@ -13,6 +13,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      
       Offense: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -80,6 +81,10 @@ module.exports = {
       ModeProbationMonth: {
         type: Sequelize.STRING,
         allowNull: true
+      },
+      County: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       IDD: {
         type: Sequelize.STRING,

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { CountyCrime, Kettlehundes, nationOne, TwoNation } = require('../../models');
+const { CountyCrime, JudgeCrime, Kettlehundes, nationOne, TwoNation } = require('../../models');
 
 const sequelize = require('sequelize'); // Import sequelize to use its functions
 
