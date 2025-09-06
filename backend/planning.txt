@@ -10,11 +10,13 @@ police misconduct section - MPD - refactor backend so it returns stuff in a nice
 
 individiual county landing screen
 
-search crimes and judges in x county
+search crimes in x county
 compare county with other counties (specific crimes)
-compare judges in county with each other
-get list of judges in county
+compare judges in county with each other - snapshot done
+get list of judges in county - css design
 
+
+individual county search
 3 - judges
 
 judge overall landing page

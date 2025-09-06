@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from "react-router-dom";
@@ -10,8 +11,9 @@ function CountyIndividual() {
   const { county } = useParams();
   const dispatch = useDispatch();
 
-  const compareData = useSelector(state => state.county || []);
-  const judges = useSelector(state => state.judge) || [];
+  const compareData = useSelector(state => state.county?.[0]?.countyData || []);
+  const totalCrimeLanding = useSelector(state => state.county?.[1]?.totalCrime || {});
+  const judges = useSelector(state => state.judge || []);
 
   const [loaded, setLoaded] = useState(false);
   const [judgesVisible, setJudgesVisible] = useState(false);
@@ -33,8 +35,6 @@ function CountyIndividual() {
     return <div className="loading">Loading {county} County data...</div>;
   }
 
-  console.log('i am comparedata ',)
-
   return (
     <div className="mainCountyLanding">
       {/* Main Content Area */}
@@ -47,13 +47,10 @@ function CountyIndividual() {
           {compareData ? (
             <div className="crime-block">
               <h4>Random Spotlight</h4>
-              <h3>{compareData[0].Offense}</h3>
-
-              <p><strong>Average Sentence Statewide:</strong> {compareData.randomCrime?.average}</p>
-              <p><strong>Total Cases Statewide:</strong> {compareData.randomCrime?.caseCount}</p>
-
-
-
+              <h3>{totalCrimeLanding.Offense}</h3>
+              <p><strong>Average Sentence Statewide (in days): </strong> {totalCrimeLanding.AverageIncarcerationDays}</p>
+              <p><strong>Average probation Sentence Statewide (in months):</strong> {totalCrimeLanding.AverageProbationMonth}</p>
+              <p><strong>Total Cases Statewide:</strong> {totalCrimeLanding.TotalCasesDays}</p>
               <div className="judge-cards">
                 {compareData?.map(judge => (
                   <div key={judge.id} className="judge-card">
@@ -74,17 +71,16 @@ function CountyIndividual() {
         </section>
       </div>
 
-      {/* Right Sidebar - Judges List */}
+      {/* Sidebar positioned outside content-left to align with the right edge */}
       <aside className="judges-sidebar">
         <button
           className="judges-toggle-btn"
           onClick={toggleJudges}
           aria-expanded={judgesVisible}
         >
-          {judgesVisible ? '← Hide' : '⚖️ Discover'} All Judges in {county}
+          {judgesVisible ? '← Hide' : '⚖️ } All Judges in {county}
           {judgesVisible ? '' : ' County'}
         </button>
-
         <div className={`judges-content ${judgesVisible ? '' : 'collapsed'}`}>
           <h2>Judicial Directory</h2>
           <div className="judges-grid">

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { CountyCrime, JudgeCrime, Kettlehundes, nationOne, TwoNation } = require('../../models');
+const { CountyCrime, JudgeCrime, Kettlehundes, nationOne, TwoNation, TotalCrime } = require('../../models');
 
 const sequelize = require('sequelize'); // Import sequelize to use its functions
 
@@ -194,6 +194,7 @@ router.get('/individual/:county', async (req, res) => {
     const MAX_ATTEMPTS = 10; // prevent infinite loops
     let attempt = 0;
     let countyData = [];
+    let randomOffense = null;
 
     while (attempt < MAX_ATTEMPTS) {
       attempt++;
@@ -207,7 +208,7 @@ router.get('/individual/:county', async (req, res) => {
 
       if (!randomOffenseResult) continue; // try again
 
-      const randomOffense = randomOffenseResult.Offense;
+      randomOffense = randomOffenseResult.Offense;
 
       // Step 2: Get 3 instances for this county and offense
       countyData = await JudgeCrime.findAll({
@@ -226,14 +227,13 @@ router.get('/individual/:county', async (req, res) => {
     }
 
     if (countyData.length < 3) {
-      // after MAX_ATTEMPTS still nothing
       return res.status(404).json({ 
         message: `Could not find 3 instances for ${countyName} after multiple attempts.` 
       });
     }
 
-    // Step 3: Format result (convert county key back to readable name)
-    const response = countyData.map(item => {
+    // Step 3: Format county result
+    const formattedCountyData = countyData.map(item => {
       const json = item.toJSON();
       return {
         ...json,
@@ -241,13 +241,24 @@ router.get('/individual/:county', async (req, res) => {
       };
     });
 
-    return res.json(response);
+    // Step 4: Get total state-level data for same offense
+    const totalStates = await TotalCrime.findOne({
+      where: { Offense: randomOffense }
+    });
+
+    // Step 5: Merge and return
+ return res.json([
+  { countyData: formattedCountyData },
+  { totalCrime: totalStates ? totalStates.toJSON() : null }
+]);
+
 
   } catch (error) {
     console.error("Error fetching individual county data:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 
 
