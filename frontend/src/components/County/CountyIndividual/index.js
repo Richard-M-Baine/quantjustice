@@ -10,10 +10,11 @@ function CountyIndividual() {
   const { county } = useParams();
   const dispatch = useDispatch();
 
-  const compareData = useSelector(state => state.county.compareOneCountyData);
-  const judges = useSelector(state => state.judges);
+  const compareData = useSelector(state => state.county || []);
+  const judges = useSelector(state => state.judge) || [];
 
   const [loaded, setLoaded] = useState(false);
+  const [judgesVisible, setJudgesVisible] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -24,60 +25,84 @@ function CountyIndividual() {
     fetchData();
   }, [county, dispatch]);
 
+  const toggleJudges = () => {
+    setJudgesVisible(!judgesVisible);
+  };
+
   if (!loaded) {
-    return <div className="loading">Loading {county} data...</div>;
+    return <div className="loading">Loading {county} County data...</div>;
   }
+
+  console.log('i am comparedata ',)
 
   return (
     <div className="mainCountyLanding">
-      <h1>All about {county}</h1>
+      {/* Main Content Area */}
+      <div className="content-left">
+        <h1>All About {county} County</h1>
 
-      {/* Section 1: CompareOneCountyDataThunk */}
-      <section className="compare-one-county">
-        <h2>Random Crime in {county}</h2>
-        {compareData ? (
-          <div className="crime-block">
-            <h3>{compareData.randomCrime?.crimeName}</h3>
-            <p>Average Sentence: {compareData.randomCrime?.average}</p>
-            <p>Case Count: {compareData.randomCrime?.caseCount}</p>
+        {/* Section 1: CompareOneCountyDataThunk */}
+        <section className="compare-one-county">
+          <h2>Featured Crime Analysis</h2>
+          {compareData ? (
+            <div className="crime-block">
+              <h4>Random Spotlight</h4>
+              <h3>{compareData[0].Offense}</h3>
 
-            <h4>Judges Sentencing This Crime</h4>
-            <div className="judge-cards">
-              {compareData.judges?.map(judge => (
+              <p><strong>Average Sentence Statewide:</strong> {compareData.randomCrime?.average}</p>
+              <p><strong>Total Cases Statewide:</strong> {compareData.randomCrime?.caseCount}</p>
+
+
+
+              <div className="judge-cards">
+                {compareData?.map(judge => (
+                  <div key={judge.id} className="judge-card">
+                    <h5>{judge.Judge}</h5>
+                    <p>Average Incarceration (in days) {judge.AverageIncarcerationYear}</p>
+                    <p>total sentences by judge {judge.TotalCasesYear}</p>
+                    <p>average probation for crime (in months) {judge.AverageProbationMonth}</p>
+                    <Link to={`/judges/${judge.id}`} className="judge-link">
+                      View Judge Profile →
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p>No crime data available for {county} County at this time.</p>
+          )}
+        </section>
+      </div>
+
+      {/* Right Sidebar - Judges List */}
+      <aside className="judges-sidebar">
+        <button
+          className="judges-toggle-btn"
+          onClick={toggleJudges}
+          aria-expanded={judgesVisible}
+        >
+          {judgesVisible ? '← Hide' : '⚖️ Discover'} All Judges in {county}
+          {judgesVisible ? '' : ' County'}
+        </button>
+
+        <div className={`judges-content ${judgesVisible ? '' : 'collapsed'}`}>
+          <h2>Judicial Directory</h2>
+          <div className="judges-grid">
+            {judges.length > 0 ? (
+              judges.map(judge => (
                 <div key={judge.id} className="judge-card">
-                  <h5>{judge.name}</h5>
-                  <p>{judge.court}</p>
-                  <Link to={`/judges/${judge.id}`} className="judge-link">
-                    View Judge Profile →
+                  <h4>{judge.Judge}</h4>
+                  <Link to={`/judges/${judge.Judge}`} className="judge-link">
+                    View Profile →
                   </Link>
                 </div>
-              ))}
-            </div>
+              ))
+            ) : (
+              <p>No judges found for {county} County.</p>
+            )}
           </div>
-        ) : (
-          <p>No crime data available for this county.</p>
-        )}
-      </section>
-
-      {/* Section 2: List of Judges */}
-      <section className="all-judges-section">
-        <h2>⚖️ All Judges in {county}</h2>
-        <div className="judges-grid">
-          {judges.length > 0 ? (
-            judges.map(judge => (
-              <div key={judge.id} className="judge-card">
-                <h4>{judge.name}</h4>
-                <p>{judge.court}</p>
-                <Link to={`/judges/${judge.id}`} className="judge-link">
-                  View Judge Profile →
-                </Link>
-              </div>
-            ))
-          ) : (
-            <p>No judges found for this county.</p>
-          )}
         </div>
-      </section>
+      </aside>
     </div>
   );
 }

@@ -179,12 +179,76 @@ router.get('/misconduct', async (req, res) => {
 
 
 router.get('/individual/:county', async (req, res) => {
-  const county = req.params
+  try {
+    const countyName = req.params.county;
+    
+    // Convert county name to database key (reverse lookup in countyMap)
+    const countyKey = Object.keys(countyMap).find(key => 
+      countyMap[key].toLowerCase() === countyName.toLowerCase()
+    );
+    
+    if (!countyKey) {
+      return res.status(404).json({ message: 'County not found' });
+    }
 
-  return res.json(county)
+    const MAX_ATTEMPTS = 10; // prevent infinite loops
+    let attempt = 0;
+    let countyData = [];
 
+    while (attempt < MAX_ATTEMPTS) {
+      attempt++;
 
+      // Step 1: Pick random offense from JudgeCrimes
+      const randomOffenseResult = await JudgeCrime.findOne({
+        attributes: ['Offense'],
+        order: sequelize.literal('RANDOM()'),
+        limit: 1,
+      });
+
+      if (!randomOffenseResult) continue; // try again
+
+      const randomOffense = randomOffenseResult.Offense;
+
+      // Step 2: Get 3 instances for this county and offense
+      countyData = await JudgeCrime.findAll({
+        where: { 
+          County: countyKey,
+          Offense: randomOffense 
+        },
+        order: sequelize.literal('RANDOM()'),
+        limit: 3,
+      });
+
+      if (countyData.length >= 3) {
+        // Found a good result → stop retrying
+        break;
+      }
+    }
+
+    if (countyData.length < 3) {
+      // after MAX_ATTEMPTS still nothing
+      return res.status(404).json({ 
+        message: `Could not find 3 instances for ${countyName} after multiple attempts.` 
+      });
+    }
+
+    // Step 3: Format result (convert county key back to readable name)
+    const response = countyData.map(item => {
+      const json = item.toJSON();
+      return {
+        ...json,
+        County: countyMap[json.County] || json.County,
+      };
+    });
+
+    return res.json(response);
+
+  } catch (error) {
+    console.error("Error fetching individual county data:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 });
+
 
 
 

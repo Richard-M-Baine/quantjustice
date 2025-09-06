@@ -1,109 +1,114 @@
 'use strict';
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('JudgeCrimes', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        autoIncrement: true,
+        allowNull: false,
       },
       Judge: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      
       Offense: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       AverageIncarcerationYear: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       TotalCasesYear: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       TotalIncarcerationYears: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       MaxSentenceYear: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       MinSentenceYear: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
-      StdDevSentenceYear:{
+      StdDevSentenceYear: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       MedianSentenceYear: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       ModeSentenceYear: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       AverageProbationMonth: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       TotalProbationMonthInstances: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       TotalIncarcerationMonth: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       MaxProbationMonth: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       MinProbationMonth: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       StdDevProbationMonth: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       MedianProbationMonth: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       ModeProbationMonth: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       County: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      IDD: {
-        type: Sequelize.STRING,
-        allowNull: true
+      JudgeId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Judges', // Must match the table name in Judges migration
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      }
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('JudgeCrimes');
-  }
+  },
 };

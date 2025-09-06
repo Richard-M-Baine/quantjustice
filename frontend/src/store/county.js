@@ -37,7 +37,7 @@ export const fetchCountyLandingSampleThunk = () => async dispatch => {
 
         const countySample = await response.json()
 
-
+       
         dispatch(getLandingAction(countySample));
 
         return countySample
