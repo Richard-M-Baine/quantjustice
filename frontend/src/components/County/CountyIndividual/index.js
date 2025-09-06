@@ -41,6 +41,24 @@ function CountyIndividual() {
       <div className="content-left">
         <h1>All About {county} County</h1>
 
+           {/* Hero Section with Call-to-Action */}
+        <section className="county-hero">
+          <div className="hero-content">
+            <h2>Search Specific County Data</h2>
+            <p>
+              Compare sentencing patterns from {county} county with other ccounties.  Explore 
+              how different judges handle cases in {county} County.
+            </p>
+            
+            <Link 
+              to={`/county/${county}/compare`} 
+              className="cta-button"
+            >
+              🔍 Compare Crimes & Judges
+            </Link>
+          </div>
+          </section>
+
         {/* Section 1: CompareOneCountyDataThunk */}
         <section className="compare-one-county">
           <h2>Featured Crime Analysis</h2>
@@ -78,18 +96,18 @@ function CountyIndividual() {
           onClick={toggleJudges}
           aria-expanded={judgesVisible}
         >
-          {judgesVisible ? '← Hide' : '⚖️ } All Judges in {county}
+          {judgesVisible ? '← Hide' : `⚖️ Display All Judges in ${county}`}
           {judgesVisible ? '' : ' County'}
         </button>
         <div className={`judges-content ${judgesVisible ? '' : 'collapsed'}`}>
-          <h2>Judicial Directory</h2>
+          <h2>List of Judges</h2>
           <div className="judges-grid">
             {judges.length > 0 ? (
               judges.map(judge => (
                 <div key={judge.id} className="judge-card">
                   <h4>{judge.Judge}</h4>
                   <Link to={`/judges/${judge.Judge}`} className="judge-link">
-                    View Profile →
+                    Search Judge's sentencing data →
                   </Link>
                 </div>
               ))
