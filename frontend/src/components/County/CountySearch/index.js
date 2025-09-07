@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 
 import './countySearch.css'
@@ -7,6 +8,7 @@ import { fetchCountyCrimeSearchThunk } from '../../../store/county';
 
 function CountySearch() {
   const dispatch = useDispatch()
+  const {county} = useParams()
 
   const [crime, setCrime] = useState('')
   const [sentence, setSentence] = useState('')
@@ -16,10 +18,12 @@ function CountySearch() {
     e.preventDefault()
 
     const searchCrimeGroup = {
+      county: county,
       crime: crime,
       sentence: sentence,
       probation: probation
     }
+    console.log('look at me inside function')
     await dispatch(fetchCountyCrimeSearchThunk(searchCrimeGroup))
   }
 

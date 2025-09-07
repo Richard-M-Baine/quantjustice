@@ -93,8 +93,13 @@ router.get('/landing', async (req, res) => {
 });
 
 router.get('/crimesearch', async (req, res) => {
-  console.log('crime search look at me')
-  res.json('ich mochte zu sterben')
+
+  const {county, crime, sentence, probation} = req.query
+ 
+  const crimeSearchClean = clean ({
+
+  })
+
 });
 
 
