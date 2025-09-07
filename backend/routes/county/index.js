@@ -92,7 +92,10 @@ router.get('/landing', async (req, res) => {
   }
 });
 
-
+router.get('/crimesearch', async (req, res) => {
+  console.log('crime search look at me')
+  res.json('ich mochte zu sterben')
+});
 
 
 router.get('/misconduct', async (req, res) => {

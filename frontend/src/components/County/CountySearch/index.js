@@ -3,74 +3,65 @@ import { useDispatch, useSelector } from 'react-redux';
 
 
 import './countySearch.css'
+import { fetchCountyCrimeSearchThunk } from '../../../store/county';
 
 function CountySearch() {
+  const dispatch = useDispatch()
 
-  const handleFormSubmit = () => {
-    return null
+  const [crime, setCrime] = useState('')
+  const [sentence, setSentence] = useState('')
+  const [probation, setProbation] = useState('')
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault()
+
+    const searchCrimeGroup = {
+      crime: crime,
+      sentence: sentence,
+      probation: probation
+    }
+    await dispatch(fetchCountyCrimeSearchThunk(searchCrimeGroup))
   }
 
   return (
-    <div className="MisconductSearchMain">
-      <h1>First search for a crime or related attributes. Then you can compare the county to other counties and specific judges in county with each other</h1>
-      <form onSubmit={handleFormSubmit}>
+    <div className="CountySearchMain">
+      <h1>First search for a specifc crime or other criteria. Then you can compare the county to other counties and specific judges in county with each other</h1>
+      <form className="countySearchForm" onSubmit={handleFormSubmit}>
 
-        <div className="form-glump">
-          <label>Rank</label>
+        <div className="countySearchFormDiv">
+          <label>Crime</label>
           <input
-          // type="text"
-          // id="rank"
-          // name="rank"
-          // value={rank}
-          // onChange={(e) => setRank(e.target.value)}
+            type="text"
+            id="CountycrimeSearch"
+            name="CountycrimeSearch"
+            value={crime}
+            onChange={(e) => setCrime(e.target.value)}
+          />
+        </div>
+
+        <div className="countySearchFormDiv">
+          <label>Average Incarceration Length (days) above:</label>
+          <input
+            type="text"
+            id="CountyCrimeDays"
+            name="CountyCrimeDays"
+            value={sentence}
+            onChange={(e) => setSentence(e.target.value)}
           />
         </div>
 
         <div className="form-glump">
-          <label>Officer First Name:</label>
+          <label htmlFor="officerName">Average probation sentence above:</label>
           <input
-          // type="text"
-          // id="officerFirstName"
-          // name="officerFirstName"
-          // value={firstName}
-          // onChange={(e) => setFirstName(e.target.value)}
+            type="text"
+            id="CountyCrimeProbation"
+            name="CountyCrimeProbation"
+            value={probation}
+            onChange={(e) => setProbation(e.target.value)}
           />
         </div>
 
-        <div className="form-glump">
-          <label htmlFor="officerName">Officer Last Name:</label>
-          <input
-          // type="text"
-          // id="OfficerlastName"
-          // name="OfficerlastName"
-          // value={lastName}
-          // onChange={(e) => setLastName(e.target.value)}
-          />
-        </div>
 
-        <div className="form-glump">
-          <label htmlFor="stateAbbreviation">State (abbreviation)</label>
-          <input
-          // type="text"
-          // id="stateAbbreviation"
-          // name="stateAbbreviation"
-          // value={stateAbbreviation}
-          // onChange={handleStateChange}
-          // maxLength="2" // Limit input to 2 characters
-          />
-      
-        </div>
-
-        <div className="form-glump">
-          <label htmlFor="officerName">Department / Agency</label>
-          <input
-          // type="text"
-          // id="agency"
-          // name="agency"
-          // value={agency}
-          // onChange={(e) => setAgency(e.target.value)}
-          />
-        </div>
 
         <div className="button-group">
           <button

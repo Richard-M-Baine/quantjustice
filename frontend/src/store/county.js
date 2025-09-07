@@ -1,5 +1,6 @@
 const LANDING = 'county/landing'
 const Individual = 'county/individual'
+const Search = 'county/search'
 
 
 const getLandingAction = payload => {
@@ -14,6 +15,14 @@ const getIndividualAction = payload => {
 
     return {
         type: Individual,
+        payload
+    }
+}
+
+const getCountySearchAction = payload => {
+
+    return {
+        type: Search,
         payload
     }
 }
@@ -37,7 +46,7 @@ export const fetchCountyLandingSampleThunk = () => async dispatch => {
 
         const countySample = await response.json()
 
-       
+
         dispatch(getLandingAction(countySample));
 
         return countySample
@@ -73,7 +82,27 @@ export const fetchIndividualCountyJudgesThunk = (county) => async dispatch => {
 
 
 
+export const fetchCountyCrimeSearchThunk = (payload) => async dispatch => {
 
+
+    // Turn payload object into query string
+    const queryString = new URLSearchParams(payload).toString();
+
+    const response = await fetch(`/api/county/crimesearch?${queryString}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (response.ok) {
+        const countySearchResults = await response.json();
+
+        dispatch(getCountySearchAction(countySearchResults));
+        return countySearchResults;
+    }
+};
 
 
 const initialState = {}
@@ -94,6 +123,10 @@ const countyReducer = (state = initialState, action) => {
             return [...action.payload]; // keep everything as an array
         }
 
+        case Search: {
+            if (!action.payload) return state;
+            return [...action.payload]; // keep everything as an array
+        }
 
 
         default: {

@@ -65,7 +65,7 @@ function MisconductSearch() {
       Amtstelle: agency,
     }
 
-    console.log(searchMisconductGroup, ' i am in component')
+    
     await dispatch(fetchMisconductSearchThunk(searchMisconductGroup))
     setHasSearched(true);
     setCurrentPage(0); // Reset to first page on new search
