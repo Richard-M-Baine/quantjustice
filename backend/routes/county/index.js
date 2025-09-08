@@ -3,6 +3,7 @@ const router = express.Router();
 const { CountyCrime, JudgeCrime, Kettlehundes, nationOne, TwoNation, TotalCrime } = require('../../models');
 
 const sequelize = require('sequelize'); // Import sequelize to use its functions
+const { Op } = require('sequelize'); // Import Sequelize operators
 
 // Utility to strip out undefined/empty filters
 const clean = (obj) => {
@@ -92,15 +93,101 @@ router.get('/landing', async (req, res) => {
   }
 });
 
+
+
 router.get('/crimesearch', async (req, res) => {
+  try {
+    const { county, crime, sentence, probation } = req.query;
 
-  const {county, crime, sentence, probation} = req.query
- 
-  const crimeSearchClean = clean ({
+    const countyKey = Object.keys(countyMap).find(key => 
+      countyMap[key].toLowerCase() === county.toLowerCase()
+    );
 
-  })
+    // Build objects for JudgeCrime and CountyCrime
+    let judgeCrimeSearchClean = {
+      County: countyKey,
+      Offense: crime,
+      AverageIncarcerationYear: sentence,
+      AverageProbationMonth: probation,
+    };
 
+    let countyCrimeSearchClean = {
+      Offense: crime,
+      AverageIncarcerationLength: sentence,
+      AverageProbation: probation,
+    };
+
+    // Clean the objects (assuming clean removes undefined/null/empty values)
+    judgeCrimeSearchClean = clean(judgeCrimeSearchClean);
+    countyCrimeSearchClean = clean(countyCrimeSearchClean);
+
+    // Build where clauses with Op.like for partial matching
+    const judgeCrimeWhere = {};
+    const countyCrimeWhere = {};
+
+    if (judgeCrimeSearchClean.County) {
+      judgeCrimeWhere.County = { [Op.like]: `%${judgeCrimeSearchClean.County}%` };
+    }
+    if (judgeCrimeSearchClean.Offense) {
+      judgeCrimeWhere.Offense = { [Op.like]: `%${judgeCrimeSearchClean.Offense}%` };
+    }
+    if (judgeCrimeSearchClean.AverageIncarcerationYear) {
+      judgeCrimeWhere.AverageIncarcerationYear = { [Op.gte]: judgeCrimeSearchClean.AverageIncarcerationYear };
+    }
+    if (judgeCrimeSearchClean.AverageProbationMonth) {
+      judgeCrimeWhere.AverageProbationMonth = { [Op.gte]: judgeCrimeSearchClean.AverageProbationMonth };
+    }
+
+    if (countyCrimeSearchClean.Offense) {
+      countyCrimeWhere.Offense = { [Op.like]: `%${countyCrimeSearchClean.Offense}%` };
+    }
+    if (countyCrimeSearchClean.AverageIncarcerationLength) {
+      countyCrimeWhere.AverageIncarcerationLength = { [Op.gte]: countyCrimeSearchClean.AverageIncarcerationLength };
+    }
+    if (countyCrimeSearchClean.AverageProbation) {
+      countyCrimeWhere.AverageProbation = { [Op.gte]: countyCrimeSearchClean.AverageProbation };
+    }
+
+    // Execute queries
+    const [judgeCrimeSearchResults, countyCrimeSearchResults] = await Promise.all([
+      JudgeCrime.findAll({ where: judgeCrimeWhere }),
+      CountyCrime.findAll({ where: countyCrimeWhere }),
+    ]);
+
+    // Extract unique offenses from judgeCrimeSearchResults
+    const uniqueOffenses = [...new Set(
+      judgeCrimeSearchResults
+        .map(result => result.Offense)
+        .filter(offense => offense) // Remove any null/undefined offenses
+    )].sort(); // Sort alphabetically for easier display
+
+    // Check if results are empty and log a warning if so
+    if (judgeCrimeSearchResults.length === 0) {
+      console.log('Warning: No JudgeCrime results found for query:', judgeCrimeWhere);
+    }
+    if (countyCrimeSearchResults.length === 0) {
+      console.log('Warning: No CountyCrime results found for query:', countyCrimeWhere);
+    }
+
+    // Return all data including the unique offenses array
+    const returnArray = [
+      {judgeCrimeResults: [...judgeCrimeSearchResults]},
+      {countyCrimeResults: [...countyCrimeSearchResults]},
+      {uniqueOffenses: uniqueOffenses},
+      {totalJudgeRecords: judgeCrimeSearchResults.length},
+      {totalCountyRecords: countyCrimeSearchResults.length},
+      {uniqueOffenseCount: uniqueOffenses.length}
+    ];
+
+    res.json(returnArray);
+  } catch (err) {
+    console.error('Error in crimesearch:', err);
+    res.status(500).json({ error: 'Server error', details: err.message });
+  }
 });
+
+
+
 
 
 router.get('/misconduct', async (req, res) => {
@@ -176,7 +263,7 @@ router.get('/misconduct', async (req, res) => {
       ...normalizedTwoNation
     ];
 
-    console.log('i am all results ', allResults);
+
     res.json(allResults);
 
   } catch (err) {
