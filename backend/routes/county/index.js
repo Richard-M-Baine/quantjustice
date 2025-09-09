@@ -103,41 +103,26 @@ router.get('/crimesearch', async (req, res) => {
       countyMap[key].toLowerCase() === county.toLowerCase()
     );
 
-    // Build objects for JudgeCrime and CountyCrime
-    let judgeCrimeSearchClean = {
-      County: countyKey,
-      Offense: crime,
-      AverageIncarcerationYear: sentence,
-      AverageProbationMonth: probation,
-    };
+    
 
     let countyCrimeSearchClean = {
+      County: countyKey,
       Offense: crime,
       AverageIncarcerationLength: sentence,
       AverageProbation: probation,
     };
 
-    // Clean the objects (assuming clean removes undefined/null/empty values)
-    judgeCrimeSearchClean = clean(judgeCrimeSearchClean);
+   
     countyCrimeSearchClean = clean(countyCrimeSearchClean);
 
     // Build where clauses with Op.like for partial matching
-    const judgeCrimeWhere = {};
+ 
     const countyCrimeWhere = {};
 
-    if (judgeCrimeSearchClean.County) {
-      judgeCrimeWhere.County = { [Op.like]: `%${judgeCrimeSearchClean.County}%` };
+     if (countyCrimeSearchClean.County) {
+      countyCrimeWhere.County = { [Op.like]: `%${countyCrimeSearchClean.County}%` };
     }
-    if (judgeCrimeSearchClean.Offense) {
-      judgeCrimeWhere.Offense = { [Op.like]: `%${judgeCrimeSearchClean.Offense}%` };
-    }
-    if (judgeCrimeSearchClean.AverageIncarcerationYear) {
-      judgeCrimeWhere.AverageIncarcerationYear = { [Op.gte]: judgeCrimeSearchClean.AverageIncarcerationYear };
-    }
-    if (judgeCrimeSearchClean.AverageProbationMonth) {
-      judgeCrimeWhere.AverageProbationMonth = { [Op.gte]: judgeCrimeSearchClean.AverageProbationMonth };
-    }
-
+   
     if (countyCrimeSearchClean.Offense) {
       countyCrimeWhere.Offense = { [Op.like]: `%${countyCrimeSearchClean.Offense}%` };
     }
@@ -149,34 +134,21 @@ router.get('/crimesearch', async (req, res) => {
     }
 
     // Execute queries
-    const [judgeCrimeSearchResults, countyCrimeSearchResults] = await Promise.all([
-      JudgeCrime.findAll({ where: judgeCrimeWhere }),
-      CountyCrime.findAll({ where: countyCrimeWhere }),
-    ]);
+    const countyCrimeSearchResults = await (
 
-    // Extract unique offenses from judgeCrimeSearchResults
-    const uniqueOffenses = [...new Set(
-      judgeCrimeSearchResults
-        .map(result => result.Offense)
-        .filter(offense => offense) // Remove any null/undefined offenses
-    )].sort(); // Sort alphabetically for easier display
+      CountyCrime.findAll({ where: countyCrimeWhere })
 
-    // Check if results are empty and log a warning if so
-    if (judgeCrimeSearchResults.length === 0) {
-      console.log('Warning: No JudgeCrime results found for query:', judgeCrimeWhere);
-    }
+  )
+
     if (countyCrimeSearchResults.length === 0) {
       console.log('Warning: No CountyCrime results found for query:', countyCrimeWhere);
     }
 
     // Return all data including the unique offenses array
     const returnArray = [
-      {judgeCrimeResults: [...judgeCrimeSearchResults]},
+    
       {countyCrimeResults: [...countyCrimeSearchResults]},
-      {uniqueOffenses: uniqueOffenses},
-      {totalJudgeRecords: judgeCrimeSearchResults.length},
-      {totalCountyRecords: countyCrimeSearchResults.length},
-      {uniqueOffenseCount: uniqueOffenses.length}
+
     ];
 
     res.json(returnArray);

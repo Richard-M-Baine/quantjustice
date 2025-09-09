@@ -6,8 +6,8 @@ import './countySearch.css';
 function CountySearch({ county, redirect = false }) {
   const dispatch = useDispatch();
 
-  const countyList = useSelector(state => state?.county[2]?.uniqueOffenses ?? []);
-  const uniqueCrimeNumber = useSelector(state => state?.county[5]?.uniqueOffenseCount ?? 0);
+  const countyList = useSelector(state => state?.county.countyCrimeResults ?? []);
+
 
   const [crime, setCrime] = useState('');
   const [sentence, setSentence] = useState('');
@@ -37,7 +37,7 @@ function CountySearch({ county, redirect = false }) {
     setSearched(false);
   };
 
-  const totalResults = uniqueCrimeNumber;
+  const totalResults = countyList.length
   const totalPages = Math.ceil(totalResults / resultsPerPage);
   const startIndex = currentPage * resultsPerPage;
   const endIndex = startIndex + resultsPerPage;
