@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCountyCrimeSearchThunk } from '../../../store/county';
 import './countySearch.css';
+import { Link } from 'react-router-dom';
 
 function CountySearch({ county, redirect = false }) {
   const dispatch = useDispatch();
-
-  const countyList = useSelector(state => state?.county.countyCrimeResults ?? []);
-
+  
+  // Fixed selector to match your actual state structure
+  const countyList = useSelector(state => state?.county?.[0]?.countyCrimeResults ?? []);
 
   const [crime, setCrime] = useState('');
   const [sentence, setSentence] = useState('');
@@ -37,7 +38,8 @@ function CountySearch({ county, redirect = false }) {
     setSearched(false);
   };
 
-  const totalResults = countyList.length
+  const totalResults = countyList.length;
+  console.log(totalResults, 'i am total results')
   const totalPages = Math.ceil(totalResults / resultsPerPage);
   const startIndex = currentPage * resultsPerPage;
   const endIndex = startIndex + resultsPerPage;
@@ -84,8 +86,10 @@ function CountySearch({ county, redirect = false }) {
             </div>
 
             <div className='groupsAllPart'>
-              {currentResults.map((UniqueCrimeList, index) => (
-                <div key={index}>{JSON.stringify(UniqueCrimeList)}</div>
+              {currentResults.map((result, index) => (
+                <div key={result.id} className="crime-result-link">
+                  <Link to={`/county/compare/${result.id}`}>{result.Offense}</Link>
+                </div>
               ))}
             </div>
 

@@ -120,7 +120,8 @@ router.get('/crimesearch', async (req, res) => {
     const countyCrimeWhere = {};
 
      if (countyCrimeSearchClean.County) {
-      countyCrimeWhere.County = { [Op.like]: `%${countyCrimeSearchClean.County}%` };
+      console.log('i am the county ',countyCrimeSearchClean.County)
+      countyCrimeWhere.County = countyCrimeSearchClean.County
     }
    
     if (countyCrimeSearchClean.Offense) {
@@ -140,6 +141,8 @@ router.get('/crimesearch', async (req, res) => {
 
   )
 
+
+
     if (countyCrimeSearchResults.length === 0) {
       console.log('Warning: No CountyCrime results found for query:', countyCrimeWhere);
     }
@@ -150,6 +153,7 @@ router.get('/crimesearch', async (req, res) => {
       {countyCrimeResults: [...countyCrimeSearchResults]},
 
     ];
+    
 
     res.json(returnArray);
   } catch (err) {
