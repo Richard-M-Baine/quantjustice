@@ -36,7 +36,7 @@ const location = useLocation()
         <Route path='/test' element={<LandingTest/>} />
         <Route path='/county' element={<CountyLanding/>} />
         <Route path='/county/:county' element={<CountyIndividual/>} />
-        <Route path='/county/compare/:id' element={<CountyCompare/>} />
+        <Route path='/county/compare/:county/:crimeId' element={<CountyCompare/>} />
         <Route path='/misconduct' element={<MisconductSearch/>} />
     
       </Routes>

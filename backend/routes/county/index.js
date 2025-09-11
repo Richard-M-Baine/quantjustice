@@ -331,6 +331,36 @@ router.get('/individual/:county', async (req, res) => {
 });
 
 
+// get all county results based on an offense crimeId of one county
+// also returns all judges in the county that sentenced someone for that offense
+router.get('/all/county/crimeId', async (req, res) => {
+  try {
+    const { county, crime } = req.query;
+
+    // find in CountyCrime
+    const countyCrimes = await CountyCrime.findAll({
+      where: { Offense: crime }
+    });
+
+    // find in JudgeCrime
+    const judgeCrimes = await JudgeCrime.findAll({
+      where: {
+        County: county,
+        Offense: crime
+      }
+    });
+
+    // send both back
+    res.json({
+      countyCrimes,
+      judgeCrimes
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Ugh! Server break.' });
+  }
+});
+
 
 
 

@@ -88,7 +88,7 @@ function CountySearch({ county, redirect = false }) {
             <div className='groupsAllPart'>
               {currentResults.map((result, index) => (
                 <div key={result.id} className="crime-result-link">
-                  <Link to={`/county/compare/${result.id}`}>{result.Offense}</Link>
+                  <Link to={`/county/compare/${county}/${result.id}`}>{result.Offense}</Link>
                 </div>
               ))}
             </div>
