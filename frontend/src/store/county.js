@@ -1,6 +1,8 @@
 const LANDING = 'county/landing'
 const Individual = 'county/individual'
 const Search = 'county/search'
+const COUNTY_CRIME_DATA = 'county/crime/data';
+
 
 
 const getLandingAction = payload => {
@@ -27,7 +29,44 @@ const getCountySearchAction = payload => {
     }
 }
 
+const getCountyCrimeDataAction = payload => {
+    return {
+        type: COUNTY_CRIME_DATA,
+        payload
+    };
+};
 
+
+
+export const fetchCountyCrimeDataThunk = (county, crimeId) => async dispatch => {
+    try {
+        // Make the server call to the backend route
+
+        console.log('look at me in the begining of the thunk',county, crimeId)
+        const response = await fetch(`/api/county/${county}/crimeId/${crimeId}`, {
+            
+            method: 'GET',
+            credentials: 'include',  // Send cookies if needed
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        // Check if server says "OK"
+        if (response.ok) {
+            const data = await response.json();
+
+            // Dispatch to put data into frontend store
+            dispatch(getCountyCrimeDataAction(data));
+            
+            return data;
+        } else {
+            console.error('Server not happy!');
+        }
+    } catch (err) {
+        console.error('Error in thunk: ', err);
+    }
+};
 
 
 // county Landing
@@ -127,6 +166,14 @@ const countyReducer = (state = initialState, action) => {
             if (!action.payload) return state;
             return [...action.payload]; // keep everything as an array
         }
+
+        case COUNTY_CRIME_DATA:
+            if (!action.payload) return state;
+            return {
+                ...state,
+                countyCrimeData: action.payload
+            };
+
 
 
         default: {

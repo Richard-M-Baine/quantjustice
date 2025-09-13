@@ -333,33 +333,49 @@ router.get('/individual/:county', async (req, res) => {
 
 // get all county results based on an offense crimeId of one county
 // also returns all judges in the county that sentenced someone for that offense
-router.get('/all/county/crimeId', async (req, res) => {
+
+
+router.get('/:county/crimeId/:crimeId', async (req, res) => {
+
   try {
-    const { county, crime } = req.query;
+    const { county, crimeId } = req.params;
+    
+   
 
-    // find in CountyCrime
-    const countyCrimes = await CountyCrime.findAll({
-      where: { Offense: crime }
-    });
+    if (!county || !crimeId) {
+      return res.status(400).json({ error: 'Missing required query parameters: county and crimeId' });
+    }
 
-    // find in JudgeCrime
+    const countyCrime = await CountyCrime.findOne({
+  where: { id: crimeId },
+  attributes: ['Offense'],
+  raw: true
+});
+
+const offense = countyCrime.Offense
+   const countyKey = Object.keys(countyMap).find(key => 
+      countyMap[key].toLowerCase() === county.toLowerCase())
+
+   const countyCrimes = await CountyCrime.findAll({
+      where: {Offense: offense}
+    })
+
     const judgeCrimes = await JudgeCrime.findAll({
       where: {
-        County: county,
-        Offense: crime
+        county: countyKey,
+        Offense: offense
       }
-    });
+    })
 
-    // send both back
-    res.json({
-      countyCrimes,
-      judgeCrimes
-    });
+    res.json({ countyCrimes, judgeCrimes });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Ugh! Server break.' });
+    console.error('Error fetching county crime data:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
+
 
 
 
