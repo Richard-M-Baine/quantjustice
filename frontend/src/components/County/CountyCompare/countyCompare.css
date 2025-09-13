@@ -1,0 +1,23 @@
+.dual-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.lists {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+select {
+  width: 200px;
+  height: 200px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

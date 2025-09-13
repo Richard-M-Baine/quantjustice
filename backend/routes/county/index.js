@@ -367,6 +367,8 @@ const offense = countyCrime.Offense
       }
     })
 
+    console.log(countyCrimes.length, judgeCrimes.length)
+
     res.json({ countyCrimes, judgeCrimes });
   } catch (err) {
     console.error('Error fetching county crime data:', err);

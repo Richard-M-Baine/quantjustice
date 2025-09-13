@@ -42,7 +42,7 @@ export const fetchCountyCrimeDataThunk = (county, crimeId) => async dispatch => 
     try {
         // Make the server call to the backend route
 
-        console.log('look at me in the begining of the thunk',county, crimeId)
+     
         const response = await fetch(`/api/county/${county}/crimeId/${crimeId}`, {
             
             method: 'GET',
@@ -168,11 +168,13 @@ const countyReducer = (state = initialState, action) => {
         }
 
         case COUNTY_CRIME_DATA:
-            if (!action.payload) return state;
-            return {
-                ...state,
-                countyCrimeData: action.payload
-            };
+    if (!action.payload) return state;
+    return {
+        ...state,
+        countyCrimes: action.payload.countyCrimes,
+        judgeCrimes: action.payload.judgeCrimes
+    };
+
 
 
 
