@@ -13,25 +13,34 @@ function DualListSelector({ title, items, onSubmit }) {
   const [selected, setSelected] = useState([]);
   const [chosen, setChosen] = useState([]);
 
-  console.log('i am selected ',selected)
-  console.log('i am chosen ', chosen)
+  console.log("i am selected counties ", selected);
 
   // Track what’s selected in each box
   const handleAvailableSelect = (e) => {
-    const options = Array.from(e.target.selectedOptions, (o) => o.value);
+    const options = Array.from(e.target.selectedOptions, (o) =>
+      JSON.parse(o.value)
+    );
     setChosen(options);
   };
 
   const moveRight = () => {
-    const toMove = available.filter((item) => chosen.includes(item));
-    setAvailable(available.filter((item) => !chosen.includes(item)));
+    const toMove = available.filter((item) =>
+      chosen.some((c) => c.id === item.id)
+    );
+    setAvailable(available.filter((item) =>
+      !chosen.some((c) => c.id === item.id)
+    ));
     setSelected([...selected, ...toMove]);
     setChosen([]);
   };
 
   const moveLeft = () => {
-    const toMove = selected.filter((item) => chosen.includes(item));
-    setSelected(selected.filter((item) => !chosen.includes(item)));
+    const toMove = selected.filter((item) =>
+      chosen.some((c) => c.id === item.id)
+    );
+    setSelected(selected.filter((item) =>
+      !chosen.some((c) => c.id === item.id)
+    ));
     setAvailable([...available, ...toMove]);
     setChosen([]);
   };
@@ -42,8 +51,8 @@ function DualListSelector({ title, items, onSubmit }) {
       <div className="lists">
         <select multiple size={10} onChange={handleAvailableSelect}>
           {available.map((item, i) => (
-            <option key={i} value={item}>
-              {item}
+            <option key={i} value={JSON.stringify(item)}>
+              {item.County} {/* Display name */}
             </option>
           ))}
         </select>
@@ -55,8 +64,8 @@ function DualListSelector({ title, items, onSubmit }) {
 
         <select multiple size={10} onChange={handleAvailableSelect}>
           {selected.map((item, i) => (
-            <option key={i} value={item}>
-              {item}
+            <option key={i} value={JSON.stringify(item)}>
+              {item.County}
             </option>
           ))}
         </select>
@@ -67,30 +76,39 @@ function DualListSelector({ title, items, onSubmit }) {
   );
 }
 
+
 function DualListSelectorJudges({ title, items, onSubmit }) {
   const [availableJudges, setAvailableJudges] = useState(items);
   const [selectedJudges, setSelectedJudges] = useState([]);
   const [chosenJudges, setChosenJudges] = useState([]);
 
-  console.log('i am selected judges ',selectedJudges)
- 
+  console.log("i am selected judges ", selectedJudges);
 
-  // Track what’s selected in each box
   const handleAvailableSelect = (e) => {
-    const options = Array.from(e.target.selectedOptions, (o) => o.value);
+    const options = Array.from(e.target.selectedOptions, (o) =>
+      JSON.parse(o.value)
+    );
     setChosenJudges(options);
   };
 
   const moveRightJudges = () => {
-    const toMove = availableJudges.filter((item) => chosenJudges.includes(item));
-    setAvailableJudges(availableJudges.filter((item) => !chosenJudges.includes(item)));
+    const toMove = availableJudges.filter((item) =>
+      chosenJudges.some((c) => c.id === item.id)
+    );
+    setAvailableJudges(availableJudges.filter((item) =>
+      !chosenJudges.some((c) => c.id === item.id)
+    ));
     setSelectedJudges([...selectedJudges, ...toMove]);
     setChosenJudges([]);
   };
 
   const moveLeftJudges = () => {
-    const toMove = selectedJudges.filter((item) => chosenJudges.includes(item));
-    setSelectedJudges(selectedJudges.filter((item) => !chosenJudges.includes(item)));
+    const toMove = selectedJudges.filter((item) =>
+      chosenJudges.some((c) => c.id === item.id)
+    );
+    setSelectedJudges(selectedJudges.filter((item) =>
+      !chosenJudges.some((c) => c.id === item.id)
+    ));
     setAvailableJudges([...availableJudges, ...toMove]);
     setChosenJudges([]);
   };
@@ -101,8 +119,8 @@ function DualListSelectorJudges({ title, items, onSubmit }) {
       <div className="lists">
         <select multiple size={10} onChange={handleAvailableSelect}>
           {availableJudges.map((item, i) => (
-            <option key={i} value={item}>
-              {item}
+            <option key={i} value={JSON.stringify(item)}>
+              {item.Judge} {/* Display name */}
             </option>
           ))}
         </select>
@@ -114,8 +132,8 @@ function DualListSelectorJudges({ title, items, onSubmit }) {
 
         <select multiple size={10} onChange={handleAvailableSelect}>
           {selectedJudges.map((item, i) => (
-            <option key={i} value={item}>
-              {item}
+            <option key={i} value={JSON.stringify(item)}>
+              {item.Judge}
             </option>
           ))}
         </select>
@@ -125,6 +143,7 @@ function DualListSelectorJudges({ title, items, onSubmit }) {
     </div>
   );
 }
+
 
 
 
@@ -159,18 +178,17 @@ export default function CountyCompare() {
     loaded && (
       <div>
         <h1>County & Judge Compare</h1>
-
-        <DualListSelector
-          title="Counties"
-          items={countyData.map((c) => c.County)}
-          onSubmit={handleCountySubmit}
-        />
+<DualListSelector
+  title="Counties"
+  items={countyData} // full objects, not just abbrevs
+  onSubmit={handleCountySubmit}
+/>
 
         <DualListSelectorJudges
-          title="Judges"
-          items={judgeData.map((j) => j.Judge)}
-          onSubmit={handleJudgeSubmit}
-        />
+  title="Judges"
+  items={judgeData} // full objects, not just names
+  onSubmit={handleJudgeSubmit}
+/>
       </div>
     )
   );
