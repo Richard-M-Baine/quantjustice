@@ -10,7 +10,9 @@ function CompareJudgesSelection() {
       <h2>Comparing Judges</h2>
       <ul>
         {selectedJudgesStore.map((j, i) => (
-          <li key={i}>{j}</li>
+           <li key={i}>
+  <pre>{JSON.stringify(j, null, 2)}</pre>
+</li>
         ))}
       </ul>
     </div>

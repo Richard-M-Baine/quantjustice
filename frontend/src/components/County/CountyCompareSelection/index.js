@@ -10,7 +10,10 @@ function CompareCountiesSelection() {
       <h2>Comparing Counties</h2>
       <ul>
         {selectedCountiesStore.map((c, i) => (
-          <li key={i}>{c}</li>
+        <li key={i}>
+  <pre>{JSON.stringify(c, null, 2)}</pre>
+</li>
+
         ))}
       </ul>
     </div>
