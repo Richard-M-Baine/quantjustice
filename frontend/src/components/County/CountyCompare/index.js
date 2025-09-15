@@ -4,12 +4,17 @@ import { useNavigate, useParams } from "react-router-dom";
 
 
 import { fetchCountyCrimeDataThunk } from "../../../store/county";
+
+import { setSelectedCountiesStore, setSelectedJudgesStore } from "../../../store/county";
 import "./countyCompare.css";
 
 function DualListSelector({ title, items, onSubmit }) {
   const [available, setAvailable] = useState(items);
   const [selected, setSelected] = useState([]);
   const [chosen, setChosen] = useState([]);
+
+  console.log('i am selected ',selected)
+  console.log('i am chosen ', chosen)
 
   // Track what’s selected in each box
   const handleAvailableSelect = (e) => {
@@ -62,6 +67,67 @@ function DualListSelector({ title, items, onSubmit }) {
   );
 }
 
+function DualListSelectorJudges({ title, items, onSubmit }) {
+  const [availableJudges, setAvailableJudges] = useState(items);
+  const [selectedJudges, setSelectedJudges] = useState([]);
+  const [chosenJudges, setChosenJudges] = useState([]);
+
+  console.log('i am selected judges ',selectedJudges)
+ 
+
+  // Track what’s selected in each box
+  const handleAvailableSelect = (e) => {
+    const options = Array.from(e.target.selectedOptions, (o) => o.value);
+    setChosenJudges(options);
+  };
+
+  const moveRightJudges = () => {
+    const toMove = availableJudges.filter((item) => chosenJudges.includes(item));
+    setAvailableJudges(availableJudges.filter((item) => !chosenJudges.includes(item)));
+    setSelectedJudges([...selectedJudges, ...toMove]);
+    setChosenJudges([]);
+  };
+
+  const moveLeftJudges = () => {
+    const toMove = selectedJudges.filter((item) => chosenJudges.includes(item));
+    setSelectedJudges(selectedJudges.filter((item) => !chosenJudges.includes(item)));
+    setAvailableJudges([...availableJudges, ...toMove]);
+    setChosenJudges([]);
+  };
+
+  return (
+    <div className="dual-list">
+      <h3>{title}</h3>
+      <div className="lists">
+        <select multiple size={10} onChange={handleAvailableSelect}>
+          {availableJudges.map((item, i) => (
+            <option key={i} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+
+        <div className="buttons">
+          <button onClick={moveRightJudges}>{">"}</button>
+          <button onClick={moveLeftJudges}>{"<"}</button>
+        </div>
+
+        <select multiple size={10} onChange={handleAvailableSelect}>
+          {selectedJudges.map((item, i) => (
+            <option key={i} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <button onClick={() => onSubmit(selectedJudges)}>Submit</button>
+    </div>
+  );
+}
+
+
+
 export default function CountyCompare() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -69,24 +135,24 @@ export default function CountyCompare() {
 
   const countyData = useSelector((state) => state.county.countyCrimes || []);
   const judgeData = useSelector((state) => state.county.judgeCrimes || []);
-
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       await dispatch(fetchCountyCrimeDataThunk(county, crimeId));
-
       setLoaded(true);
     }
     fetchData();
   }, [county, crimeId, dispatch]);
 
   const handleCountySubmit = (selected) => {
-    navigate(`/compare/counties?list=${selected.join(",")}`);
+    dispatch(setSelectedCountiesStore(selected));
+    navigate("/county/compare/selection");
   };
 
-  const handleJudgeSubmit = (selected) => {
-    navigate(`/compare/judges?list=${selected.join(",")}`);
+  const handleJudgeSubmit = (selectedJudges) => {
+    dispatch(setSelectedJudgesStore(selectedJudges));
+    navigate("/judges/compare/selection");
   };
 
   return (
@@ -100,7 +166,7 @@ export default function CountyCompare() {
           onSubmit={handleCountySubmit}
         />
 
-        <DualListSelector
+        <DualListSelectorJudges
           title="Judges"
           items={judgeData.map((j) => j.Judge)}
           onSubmit={handleJudgeSubmit}
@@ -109,3 +175,4 @@ export default function CountyCompare() {
     )
   );
 }
+

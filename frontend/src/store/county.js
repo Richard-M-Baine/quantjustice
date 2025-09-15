@@ -3,7 +3,8 @@ const Individual = 'county/individual'
 const Search = 'county/search'
 const COUNTY_CRIME_DATA = 'county/crime/data';
 
-
+const SET_SELECTED_COUNTIES = "county/setSelectedCounties";
+const SET_SELECTED_JUDGES = "county/setSelectedJudges";
 
 const getLandingAction = payload => {
 
@@ -36,6 +37,15 @@ const getCountyCrimeDataAction = payload => {
     };
 };
 
+export const setSelectedCountiesStore = (payload) => ({
+  type: SET_SELECTED_COUNTIES,
+  payload,
+});
+
+export const setSelectedJudgesStore = (payload) => ({
+  type: SET_SELECTED_JUDGES,
+  payload,
+});
 
 
 export const fetchCountyCrimeDataThunk = (county, crimeId) => async dispatch => {
@@ -174,6 +184,12 @@ const countyReducer = (state = initialState, action) => {
         countyCrimes: action.payload.countyCrimes,
         judgeCrimes: action.payload.judgeCrimes
     };
+
+       case SET_SELECTED_COUNTIES:
+      return { ...state, selectedCountiesStore: action.payload };
+
+    case SET_SELECTED_JUDGES:
+      return { ...state, selectedJudgesStore: action.payload };
 
 
 
