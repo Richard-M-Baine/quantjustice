@@ -1,0 +1,17 @@
+.compare-containerSelection {
+  padding: 1rem;
+}
+
+.counties-gridCompare {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  gap: 1rem; /* spacing between cards */
+  margin-top: 1rem;
+}
+
+.county-cardCompare {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 8px; /* optional, makes it look nicer */
+  background: #fafafa; /* optional */
+}
