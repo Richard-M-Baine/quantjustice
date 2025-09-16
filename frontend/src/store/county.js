@@ -154,6 +154,9 @@ export const fetchCountyCrimeSearchThunk = (payload) => async dispatch => {
 };
 
 
+// local storage
+
+
 const initialState = {}
 
 const countyReducer = (state = initialState, action) => {
@@ -185,11 +188,18 @@ const countyReducer = (state = initialState, action) => {
         judgeCrimes: action.payload.judgeCrimes
     };
 
-       case SET_SELECTED_COUNTIES:
-      return { ...state, selectedCountiesStore: action.payload };
+    case SET_SELECTED_COUNTIES:
+  return {
+    ...state,
+    selectedCountiesStore: action.payload
+  };
 
-    case SET_SELECTED_JUDGES:
-      return { ...state, selectedJudgesStore: action.payload };
+case SET_SELECTED_JUDGES:
+  return {
+    ...state,
+    selectedJudgesStore: action.payload
+  };
+
 
 
 

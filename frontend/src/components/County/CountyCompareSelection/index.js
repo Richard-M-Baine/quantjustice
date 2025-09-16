@@ -2,12 +2,15 @@ import { useSelector } from "react-redux";
 
 function CompareCountiesSelection() {
   const selectedCountiesStore = useSelector(
-    (state) => state.county.selectedCountiesStore
+    (state) => state.county.selectedCountiesStore || []
   );
 
   return (
-    <div className="compare-containerSelection">
-      <h2>Comparing Counties</h2>
+  <div className="compare-containerSelection">
+    <h2>Comparing Counties</h2>
+    {selectedCountiesStore.length === 0 ? (
+      <p>No counties selected yet.</p>
+    ) : (
       <div className="counties-gridCompare">
         {selectedCountiesStore.map((c, i) => (
           <div key={i} className="county-cardCompare">
@@ -20,8 +23,10 @@ function CompareCountiesSelection() {
           </div>
         ))}
       </div>
-    </div>
-  );
+    )}
+  </div>
+);
+
 }
 
 export default CompareCountiesSelection;
