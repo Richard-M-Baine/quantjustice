@@ -120,7 +120,7 @@ router.get('/crimesearch', async (req, res) => {
     const countyCrimeWhere = {};
 
      if (countyCrimeSearchClean.County) {
-      console.log('i am the county ',countyCrimeSearchClean.County)
+      
       countyCrimeWhere.County = countyCrimeSearchClean.County
     }
    

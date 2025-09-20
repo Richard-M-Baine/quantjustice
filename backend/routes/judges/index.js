@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { Judge, JudgeCrimes } = require('../../models');
+const { Judge, JudgeCrime } = require('../../models');
 
 const countyMap = {
   ATL: "Atlantic",
@@ -27,6 +27,11 @@ const countyMap = {
   WAR: "Warren"
 };
 
+const clean = (obj) => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, v]) => v !== undefined && v !== "")
+  );
+}
 // Example route
 router.get('/all/:county', async (req, res) => {
   const countyName = req.params.county;
@@ -54,13 +59,53 @@ router.get('/all/:county', async (req, res) => {
 });
 
 router.get('/search', async (req, res) => {
-const blah = req.query
+  const { lastName, county, offense, } = req.query;
 
-console.log(blah)
-console.log('i am here in search')
+  const searchThing = {
+    Judge: lastName,
+    County: county,
+    Offense: offense
+  }
+  const searchThingCleaned = clean(searchThing)
 
-res.json(blah)
+
+
+
+  const searchFinished = {}
+
+  if (searchThingCleaned.County) {
+
+    searchFinished.County = searchThingCleaned.County
+  }
+
+  if (searchThingCleaned.Offense){
+    searchFinished.Offense = { [Op.like]: `%${searchThingCleaned.Offense}%` };
+  }
+
+   if (searchThingCleaned.Judge){
+    searchFinished.Judge = { [Op.like]: `%${searchThingCleaned.Judge}%` };
+  }
+
+  console.log(searchFinished, 'i am searched finsihed')
+  const searchJudgesFinalThankGod = await (
+
+      JudgeCrime.findAll({ where: searchFinished })
+
+  )
+
+    if (searchJudgesFinalThankGod.length === 0) {
+      console.log('you fucked up');
+    }
+
+    const returnArray = [
+      {judgeSearchResults: [...searchJudgesFinalThankGod]},
+    ]
+
+    res.json(returnArray)
+
 });
+
+
 
 
 module.exports = router
