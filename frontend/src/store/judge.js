@@ -1,5 +1,5 @@
 const allJudgesInCounty = 'judge/judgeList'
-
+const judgeSearch = 'judge/search'
 
 const getAllJudgesAction = payload => {
 
@@ -9,6 +9,33 @@ const getAllJudgesAction = payload => {
     }
 }
 
+const judgeSearchAction = payload => {
+
+    return {
+        type: judgeSearch,
+        payload
+    }
+}
+
+// all groups
+// all groups
+export const fetchJudgeSearchThunk = (searchGroup) => async dispatch => {
+  const queryParams = new URLSearchParams(searchGroup).toString();
+
+  const response = await fetch(`/api/judges/search?${queryParams}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (response.ok) {
+    const results = await response.json();
+    dispatch(judgeSearchAction(results));
+    return results;
+  }
+};
 
 
 
@@ -54,7 +81,10 @@ const judgeReducer = (state = initialState, action) => {
     return [...action.payload]; // keep everything as an array
 }
 
- 
+    case judgeSearch: {
+          if (!action.payload) return state;
+    return [...action.payload]; // keep everything as an array
+    }
 
         default: {
             return state;

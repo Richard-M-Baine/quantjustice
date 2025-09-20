@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { Judge } = require('../../models');
+const { Judge, JudgeCrimes } = require('../../models');
 
 const countyMap = {
   ATL: "Atlantic",
@@ -52,5 +52,15 @@ router.get('/all/:county', async (req, res) => {
     res.status(404).send('County not found.');
   }
 });
+
+router.get('/search', async (req, res) => {
+const blah = req.query
+
+console.log(blah)
+console.log('i am here in search')
+
+res.json(blah)
+});
+
 
 module.exports = router
