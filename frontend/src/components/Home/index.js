@@ -138,7 +138,7 @@ function Landing() {
                         <img src={image1} alt="two faced judge" />
                     </Link>
 
-                    <Link to="/judge-comparison" className="linkSectionLandingDiv">
+                    <Link to="/judges" className="linkSectionLandingDiv">
                         <h3>Compare individual judges sentencing data</h3>
                         <img src={image2} alt="two faced judge" />
                     </Link>

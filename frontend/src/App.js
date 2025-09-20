@@ -23,6 +23,7 @@ import NavBar from './components/NavBar/index.js'
 // judge stuff
 
 import CompareJudgesSelection from './components/Judges/JudgesCountyCompare/index.js'
+import JudgesLanding from './components/Judges/JudgesLanding/index.js';
 
 function App() {
 
@@ -44,6 +45,7 @@ const location = useLocation()
         <Route path='/county/compare/:county/:crimeId' element={<CountyCompare/>} />
         <Route path='/county/compare/selection' element={<CompareCountiesSelection />} />
         <Route path='/misconduct' element={<MisconductSearch/>} />
+        <Route path='/judges' element={<JudgesLanding />} />
         <Route path='/judges/compare/selection' element={<CompareJudgesSelection />} />
     
       </Routes>
