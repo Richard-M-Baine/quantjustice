@@ -3,6 +3,9 @@ const router = express.Router();
 
 const { Judge, JudgeCrime } = require('../../models');
 
+const sequelize = require('sequelize'); // Import sequelize to use its functions
+const { Op } = require('sequelize'); // Import Sequelize operators
+
 const countyMap = {
   ATL: "Atlantic",
   BER: "Bergen",
@@ -71,34 +74,44 @@ router.get('/search', async (req, res) => {
 
 
 
-  const searchFinished = {}
+  const searchFinishedJudges = {}
+  const searchFinishedJudgeCrimes = {}
 
   if (searchThingCleaned.County) {
 
-    searchFinished.County = searchThingCleaned.County
+    searchFinishedJudges.County = searchThingCleaned.County
+    searchFinishedJudgeCrimes.County = searchThingCleaned.County
   }
 
   if (searchThingCleaned.Offense){
-    searchFinished.Offense = { [Op.like]: `%${searchThingCleaned.Offense}%` };
+    searchFinishedJudgeCrimes.Offense = { [Op.like]: `%${searchThingCleaned.Offense}%` };
   }
 
    if (searchThingCleaned.Judge){
-    searchFinished.Judge = { [Op.like]: `%${searchThingCleaned.Judge}%` };
+    searchFinishedJudges.Judge = { [Op.like]: `%${searchThingCleaned.Judge}%` };
+    searchFinishedJudgeCrimes.Judge = { [Op.like]: `%${searchThingCleaned.Judge}%` };
   }
 
-  console.log(searchFinished, 'i am searched finsihed')
-  const searchJudgesFinalThankGod = await (
 
-      JudgeCrime.findAll({ where: searchFinished })
+  const searchJudges = await (
+
+      Judge.findAll({ where: searchFinishedJudges })
 
   )
 
-    if (searchJudgesFinalThankGod.length === 0) {
+  const searchJudgeCrimes = await (
+
+      JudgeCrime.findAll({ where: searchFinishedJudges })
+
+  )
+
+    if (searchJudges.length === 0 || searchJudgeCrimes.length === 0) {
       console.log('you fucked up');
     }
 
     const returnArray = [
-      {judgeSearchResults: [...searchJudgesFinalThankGod]},
+      {searchJudges: [...searchJudges]},
+      {searchJudgeCrimes: [...searchJudgeCrimes]},
     ]
 
     res.json(returnArray)
