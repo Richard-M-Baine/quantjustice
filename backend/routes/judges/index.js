@@ -62,61 +62,50 @@ router.get('/all/:county', async (req, res) => {
 });
 
 router.get('/search', async (req, res) => {
-  const { lastName, county, offense, } = req.query;
+  try {
+    const { lastName, county, offense } = req.query;
 
-  const searchThing = {
-    Judge: lastName,
-    County: county,
-    Offense: offense
-  }
-  const searchThingCleaned = clean(searchThing)
-
-
-
-
-  const searchFinishedJudges = {}
-  const searchFinishedJudgeCrimes = {}
-
-  if (searchThingCleaned.County) {
-
-    searchFinishedJudges.County = searchThingCleaned.County
-    searchFinishedJudgeCrimes.County = searchThingCleaned.County
-  }
-
-  if (searchThingCleaned.Offense){
-    searchFinishedJudgeCrimes.Offense = { [Op.like]: `%${searchThingCleaned.Offense}%` };
-  }
-
-   if (searchThingCleaned.Judge){
-    searchFinishedJudges.Judge = { [Op.like]: `%${searchThingCleaned.Judge}%` };
-    searchFinishedJudgeCrimes.Judge = { [Op.like]: `%${searchThingCleaned.Judge}%` };
-  }
-
-
-  const searchJudges = await (
-
-      Judge.findAll({ where: searchFinishedJudges })
-
-  )
-
-  const searchJudgeCrimes = await (
-
-      JudgeCrime.findAll({ where: searchFinishedJudges })
-
-  )
-
-    if (searchJudges.length === 0 || searchJudgeCrimes.length === 0) {
-      console.log('you fucked up');
+    // Judge search conditions
+    const judgeWhere = {};
+    if (lastName) {
+      judgeWhere.Judge = { [Op.like]: `%${lastName}%` };
+    }
+    if (county) {
+      judgeWhere.County = county;
     }
 
-    const returnArray = [
-      {searchJudges: [...searchJudges]},
-      {searchJudgeCrimes: [...searchJudgeCrimes]},
-    ]
+    // Always search judges
+    const searchJudges = await Judge.findAll({ where: judgeWhere });
 
-    res.json(returnArray)
+    // Only search JudgeCrime if offense is provided
+    let searchJudgeCrimes = [];
+    if (offense) {
+      const judgeCrimeWhere = {
+        Offense: offense // exact match
+      };
 
+
+
+      searchJudgeCrimes = await JudgeCrime.findAll({ where: judgeCrimeWhere });
+    }
+
+    // If no results at all
+    if (searchJudges.length === 0 && searchJudgeCrimes.length === 0) {
+      return res.status(404).json({ message: "No results found" });
+    }
+
+    res.json([
+      searchJudges,
+      searchJudgeCrimes
+    ]);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
+
+
 
 
 

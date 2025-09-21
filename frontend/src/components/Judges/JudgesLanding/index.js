@@ -6,7 +6,7 @@ import './JudgesLanding.css';
 
 function JudgesLanding() {
   const dispatch = useDispatch();
-  const judgeList = useSelector(state => state?.judge[0].searchJudges);
+  const judgeList = useSelector(state => state?.judge);
   const blah = judgeList[0]?.County
   console.log(blah, ' i am blah')
   console.log('i am judgeList ', judgeList)
@@ -92,15 +92,14 @@ function JudgesLanding() {
               value={offense}
               onChange={(e) => setOffense(e.target.value)}
             />
-             <button type="submit">Search</button>
+            <button type="submit">Search</button>
           </div>
         </form>
       </div>
 
       {searched && (
         <div className="results">
-          {/* render your judgeList results here */}
-          {judgeList(
+          {judgeList && judgeList.length > 0 ? (
             <ul>
               {judgeList.map((judge, idx) => (
                 <li key={idx}>
@@ -108,9 +107,10 @@ function JudgesLanding() {
                 </li>
               ))}
             </ul>
-          )} : (
-          <p>No results found.</p>
-          )</div>
+          ) : (
+            <p>No results found.</p>
+          )}
+        </div>
       )}
     </div>
   );
