@@ -86,7 +86,7 @@ function JudgesLanding() {
       <div>
         <form onSubmit={handleOffenseSubmit} className="judge-search-form">
           <div>
-            <label>offense</label>
+            <label>search for a crime to compare judges</label>
             <input
               type="text"
               value={offense}
