@@ -17,8 +17,7 @@ const judgeSearchAction = payload => {
     }
 }
 
-// all groups
-// all groups
+
 export const fetchJudgeSearchThunk = (searchGroup) => async dispatch => {
   const queryParams = new URLSearchParams(searchGroup).toString();
 

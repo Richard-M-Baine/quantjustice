@@ -11,7 +11,7 @@ import total from "./total";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["county"], // only persist this slice
+  whitelist: ["county", 'judge'], // only persist this slice
 };
 
 const rootReducer = combineReducers({

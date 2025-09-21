@@ -6,8 +6,10 @@ import './JudgesLanding.css';
 
 function JudgesLanding() {
   const dispatch = useDispatch();
-  const judgeList = useSelector(state => state?.judge);
-
+  const judgeList = useSelector(state => state?.judge[0].searchJudges);
+  const blah = judgeList[0]?.County
+  console.log(blah, ' i am blah')
+  console.log('i am judgeList ', judgeList)
 
   const [lastName, setLastName] = useState('');
   const [county, setCounty] = useState('');
@@ -24,7 +26,7 @@ function JudgesLanding() {
 
       lastName,
       county,
-      offense
+
     };
 
     // dispatch thunk with the searchGroup payload
@@ -33,58 +35,82 @@ function JudgesLanding() {
     setCurrentPage(0); // reset page on new search
   };
 
+  const handleOffenseSubmit = async (e) => {
+    e.preventDefault();
+
+    const searchGroup = {
+
+      offense
+
+    };
+
+    // dispatch thunk with the searchGroup payload
+    await dispatch(fetchJudgeSearchThunk(searchGroup));
+    setSearched(true);
+    setCurrentPage(0); // reset page on new search
+  };
+
+
   return (
     <div className="mainCountyLanding">
-      <h1 className="JudgesLandingH1Div">Judge Search</h1>
 
-      <form onSubmit={handleSubmit} className="judge-search-form">
-     
-     
-        <div>
-          <label>Last Name</label>
-          <input 
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)} 
-          />
-        </div>
 
-        <div>
-          <label>County</label>
-          <input 
-            type="text"
-            value={county}
-            onChange={(e) => setCounty(e.target.value)} 
-          />
-        </div>
+      <div>
+        <h1 className="JudgesLandingH1Div">Search by name of judge </h1>
+        <form onSubmit={handleSubmit} className="judge-search-form">
 
-        <div>
-          <label>Offense</label>
-          <input 
-            type="text"
-            value={offense}
-            onChange={(e) => setOffense(e.target.value)} 
-          />
-        </div>
 
-        <button type="submit">Search</button>
-      </form>
+          <div>
+            <label>Last Name</label>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label>County</label>
+            <input
+              type="text"
+              value={county}
+              onChange={(e) => setCounty(e.target.value)}
+            />
+          </div>
+
+
+          <button type="submit">Search</button>
+        </form>
+      </div>
+
+      <div>
+        <form onSubmit={handleOffenseSubmit} className="judge-search-form">
+          <div>
+            <label>offense</label>
+            <input
+              type="text"
+              value={offense}
+              onChange={(e) => setOffense(e.target.value)}
+            />
+             <button type="submit">Search</button>
+          </div>
+        </form>
+      </div>
 
       {searched && (
         <div className="results">
           {/* render your judgeList results here */}
-          {judgeList && judgeList.length > 0 ? (
+          {judgeList(
             <ul>
               {judgeList.map((judge, idx) => (
                 <li key={idx}>
-                 {judge.lastName} — {judge.county}
+                  {judge.Judge} — {judge.County}
                 </li>
               ))}
             </ul>
-          ) : (
-            <p>No results found.</p>
-          )}
-        </div>
+          )} : (
+          <p>No results found.</p>
+          )</div>
       )}
     </div>
   );
