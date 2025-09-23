@@ -6,7 +6,7 @@ import './JudgesLanding.css';
 
 function JudgesLanding() {
   const dispatch = useDispatch();
-  const judgeList = useSelector(state => state?.judge);
+  const judgeList = useSelector(state => state?.judge[0]);
   const blah = judgeList[0]?.County
   console.log(blah, ' i am blah')
   console.log('i am judgeList ', judgeList)

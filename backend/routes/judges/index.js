@@ -63,7 +63,7 @@ router.get('/all/:county', async (req, res) => {
 
 router.get('/search', async (req, res) => {
   try {
-    const { lastName, county} = req.query;
+    const { lastName, county, offense} = req.query;
 
     // Judge search conditions
     const judgeWhere = {};
